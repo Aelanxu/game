@@ -1,5 +1,7 @@
 import Phaser from 'phaser'
 import { LoadScene } from './scenes/LoadScene'
+
+
 const config = {
     type: Phaser.AUTO,
     width: 800,
