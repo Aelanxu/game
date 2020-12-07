@@ -2,12 +2,13 @@ import Phaser from 'phaser'
 import { LoadScene } from './scenes/LoadScene'
 const config = {
     type: Phaser.AUTO,
-    width: 400,
-    height: 300,
+    width: 800,
+    height: 600,
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 200 }
+            gravity: { y: 200 },
+            debug: false
         }
 
     },
