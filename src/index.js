@@ -1,20 +1,22 @@
 import Phaser from 'phaser'
-import { LoadScene } from './scenes/LoadScene'
+import { gameOption } from './gameOption'
+import { loadScene } from './scenes/loadScene'
+import { startScene } from './scenes/startScene';
 
 
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: gameOption.width,
+    height: gameOption.height,
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 200 },
+            gravity: { y: 300 },
             debug: false
         }
 
     },
     parent: 'game',
-    scene: [LoadScene]
+    scene: [loadScene, startScene]
 };
 const game = new Phaser.Game(config);
