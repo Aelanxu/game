@@ -8,7 +8,7 @@ export class startScene extends Phaser.Scene {
     collectStar(player, star) {
 
             star.disableBody(true, true);
-            console.log(gameOption.stars)
+
             this.calculate(10);
             if (gameOption.stars.countActive(true) === 0) {
                 gameOption.stars.children.iterate(function(child) {
@@ -43,12 +43,12 @@ export class startScene extends Phaser.Scene {
             let gameOverTitle = this.add.image(gameOption.width / 2, gameOption.height / 2, 'gameover');
             let startButton = this.add.image(gameOption.width / 2, gameOption.height - 200, 'start').setInteractive();
             startButton.on('pointerdown', (pointer) => {
-                gameOver = false;
-                title.destroy();
+                gameOption.gameOver = false;
+                gameOverTitle.destroy();
                 startButton.destroy();
                 gameOption.platforms.clear(true);
                 gameOption.player.destroy();
-                gameOption.cursors.destroy();
+                gameOption.cursors = null;
                 gameOption.stars.destroy();
                 gameOption.scoreText.destroy();
                 gameOption.bombs.destroy();
