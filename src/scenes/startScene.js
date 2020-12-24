@@ -128,18 +128,19 @@ export class startScene extends Phaser.Scene {
             //构建分数
             gameOption.scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
+            this.input.addPointer(1)
+
+
+            this.input.on('pointerdown', (pointer, currentlyOver) => {
+                console.log(888)
+                gameOption.player.setVelocityY(-330);
+            });
         }
         //
 
     update() {
         // gameOption.cursors = this.input.keyboard.createCursorKeys();
-        this.input.addPointer(1)
 
-
-        this.input.on('pointerdown', () => {
-            console.log(888)
-            gameOption.player.setVelocityY(-330);
-        });
         //     if (gameOption.gameOver) return;
         //     if (gameOption.cursors.left.isDown) {
         //         gameOption.player.setVelocityX(-160);
