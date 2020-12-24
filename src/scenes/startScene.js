@@ -132,26 +132,34 @@ export class startScene extends Phaser.Scene {
         //
 
     update() {
-        gameOption.cursors = this.input.keyboard.createCursorKeys();
-        if (gameOption.gameOver) return;
-        if (gameOption.cursors.left.isDown) {
-            gameOption.player.setVelocityX(-160);
+        // gameOption.cursors = this.input.keyboard.createCursorKeys();
+        this.input.addPointer(1)
 
-            gameOption.player.anims.play('left', true);
-        } else if (gameOption.cursors.right.isDown) {
-            gameOption.player.setVelocityX(160);
 
-            gameOption.player.anims.play('right', true);
-        } else {
-            gameOption.player.setVelocityX(0);
-
-            gameOption.player.anims.play('turn');
-        }
-
-        if (gameOption.cursors.up.isDown && gameOption.player.body.touching.down) {
+        this.input.on('pointerdown', () => {
+            console.log(888)
             gameOption.player.setVelocityY(-330);
-        }
+        });
+        //     if (gameOption.gameOver) return;
+        //     if (gameOption.cursors.left.isDown) {
+        //         gameOption.player.setVelocityX(-160);
+
+        //         gameOption.player.anims.play('left', true);
+        //     } else if (gameOption.cursors.right.isDown) {
+        //         gameOption.player.setVelocityX(160);
+
+        //         gameOption.player.anims.play('right', true);
+        //     } else {
+        //         gameOption.player.setVelocityX(0);
+
+        //         gameOption.player.anims.play('turn');
+        //     }
+
+        //     if (gameOption.cursors.up.isDown && gameOption.player.body.touching.down) {
+        //         gameOption.player.setVelocityY(-330);
+        //     }
+        // }
+
+
     }
-
-
 }

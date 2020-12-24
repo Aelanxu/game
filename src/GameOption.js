@@ -7,8 +7,8 @@ export let gameOption = {
     stars: null,
     scoreText: null,
     bombs: null,
-    width: 800,
-    height: 600,
+    width: 640,
+    height: 360,
     loadProgress() {
         let width = this.cameras.main.width;
         let height = this.cameras.main.height;
@@ -41,5 +41,9 @@ export let gameOption = {
             loadingText.destroy();
             percentText.destroy();
         });
+    },
+    getScreenSize() {
+        this.width = window.screen.availWidth;
+        this.height = window.screen.availHeight;
     }
 }
