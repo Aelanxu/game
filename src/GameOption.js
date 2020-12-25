@@ -1,6 +1,7 @@
 export let gameOption = {
     score: 0,
     gameOver: false,
+    ground:null,
     platforms: null,
     player: null,
     cursors: null,
