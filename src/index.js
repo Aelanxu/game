@@ -31,7 +31,8 @@ window.onload = () => {
 
 function resize() {
     gameOption.getScreenSize();
-    console.log(0)
+    console.log(gameOption.width)
+    console.log(gameOption.height)
         // let canvas = document.querySelector('canvas');
         // let windowWidth = window.innerWidth;
         // let windowHeight = window.innerHeight;
