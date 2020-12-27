@@ -52,7 +52,7 @@ export class startScene extends Phaser.Scene {
                 startButton.destroy();
                 gameOption.platforms.clear(true);
                 gameOption.player.destroy();
-                gameOption.cursors = null;
+                // gameOption.cursors = null;
                 gameOption.stars.destroy();
                 gameOption.scoreText.destroy();
                 gameOption.bombs.destroy();
@@ -71,18 +71,18 @@ export class startScene extends Phaser.Scene {
         //创建地板
     createPlatforms() {
             //地面的固定位置
-
+            let rx = Phaser.Math.Between(0, 2) * 20;
             let rd = Phaser.Math.Between(1, 2) * 30;
             let ld = Phaser.Math.Between(1, 3) * 40;
-            let md = Phaser.Math.Between(3, 5) * 50;
+            let md = Phaser.Math.Between(0, 2) * 20;
             let pY = this.bottomY - 150;
 
 
-            console.log(rd)
+            console.log('y' + rx)
 
-            gameOption.platforms.create(50, pY - ld, 'platform');
+            gameOption.platforms.create(50 - rx, pY - ld, 'platform');
             gameOption.platforms.create(gameOption.width / 2, pY - md, 'platform');
-            gameOption.platforms.create(gameOption.width - 50, pY - rd, 'platform');
+            gameOption.platforms.create(gameOption.width - 50 + rx, pY - rd, 'platform');
             gameOption.platforms.children.iterate(function(child) {
                 child.body.allowGravity = false;
             })
@@ -94,15 +94,17 @@ export class startScene extends Phaser.Scene {
         }
         // 创建操作按钮
     createButton() {
-        let leftButton = this.add.image(0, 0, 'leftB').setInteractive();
-        let upButton = this.add.image(0, 0, 'upB').setInteractive();
-        let rightButton = this.add.image(0, 0, 'rightB').setInteractive();
+        let hitArea = new Phaser.Geom.Rectangle(-48, -48, gameOption.width / 3, gameOption.height * 0.3)
+        let leftButton = this.add.image(0, 0, 'leftB').setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        let upButton = this.add.image(0, 0, 'upB').setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        let rightButton = this.add.image(0, 0, 'rightB').setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
         Phaser.Actions.GridAlign([leftButton, upButton, rightButton], {
-            width: 48,
-            cellWidth: 100,
-            cellHeight: 100,
-            x: gameOption.width / 2 - 70,
-            y: gameOption.height - gameOption.height * 0.08
+            width: 3,
+            height: 3,
+            cellWidth: (gameOption.width - 144) / 2,
+            cellHeight: 48,
+            x: 120,
+            y: this.bottomY + this.bottomY * 0.25
         });
         //操作
         this.input.addPointer(1)
@@ -123,15 +125,17 @@ export class startScene extends Phaser.Scene {
 
         });
         leftButton.on('pointerdown', () => {
+            if (gameOption.gameOver) return;
             gameOption.player.setVelocityX(-160);
             gameOption.player.anims.play('left', true);
-
+            //leftButton.setTint(0x44ff44);
         });
         leftButton.on('pointerup', () => {
             gameOption.player.setVelocityX(0);
             gameOption.player.anims.play('turn');
         });
         rightButton.on('pointerdown', () => {
+            if (gameOption.gameOver) return;
             gameOption.player.setVelocityX(160);
             gameOption.player.anims.play('right', true);
         });
@@ -152,7 +156,7 @@ export class startScene extends Phaser.Scene {
             this.createPlatforms();
             this.createButton();
             // 创建精灵
-            gameOption.player = this.physics.add.sprite(100, 250, 'dude');
+            gameOption.player = this.physics.add.sprite(100, this.bottomY - 160, 'dude');
             gameOption.player.setBounceY(0.3); //反弹
             gameOption.player.setCollideWorldBounds(true);
             //监测碰撞
@@ -180,8 +184,8 @@ export class startScene extends Phaser.Scene {
             //创建星星
             gameOption.stars = this.physics.add.group({
                 key: 'star',
-                repeat: 11,
-                setXY: { x: 14, y: 0, stepX: 35 }
+                repeat: 9,
+                setXY: { x: 14, y: 0, stepX: gameOption.width / 10 }
             });
             gameOption.stars.children.iterate(function(child) {
 

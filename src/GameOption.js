@@ -44,7 +44,8 @@ export let gameOption = {
         });
     },
     getScreenSize() {
-        this.width = window.screen.availWidth;
-        this.height = window.screen.availHeight;
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+
     }
 }
