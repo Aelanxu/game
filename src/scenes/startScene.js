@@ -162,10 +162,10 @@ export class startScene extends Phaser.Scene {
         let rightButton = this.add.image(0, 0, 'rightB').setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
         Phaser.Actions.GridAlign([leftButton, upButton, rightButton], {
             width: 3,
-            height: 3,
-            cellWidth: (gameOption.width - 144) / 2,
+            height: 1,
+            cellWidth: (gameOption.width - 166) / 2,
             cellHeight: 48,
-            x: 120,
+            x: 124,
             y: this.bottomY + this.bottomY * 0.2
         });
         //操作
@@ -214,32 +214,14 @@ export class startScene extends Phaser.Scene {
             this.createPlatforms();
             this.createButton();
             this.createKeyContral();
-            // 创建精灵
-            gameOption.player = this.physics.add.sprite(100, this.bottomY - 160, 'dude');
-            gameOption.player.setBounceY(0.3); //反弹
-            gameOption.player.setCollideWorldBounds(true);
+            // 初始化主角位置
+            gameOption.createSprite(this, 100, this.bottomY - 160, 'dude')
+
             //监测碰撞
             this.physics.add.collider(gameOption.player, gameOption.ground);
             this.physics.add.collider(gameOption.player, gameOption.platforms);
-            this.anims.create({
-                key: 'left',
-                frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-                frameRate: 10,
-                repeat: -1
-            });
 
-            this.anims.create({
-                key: 'turn',
-                frames: [{ key: 'dude', frame: 4 }],
-                frameRate: 20
-            });
 
-            this.anims.create({
-                key: 'right',
-                frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-                frameRate: 10,
-                repeat: -1
-            }); //end
             //创建星星
             gameOption.stars = this.physics.add.group({
                 key: 'star',
