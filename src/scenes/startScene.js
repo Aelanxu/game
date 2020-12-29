@@ -52,7 +52,7 @@ export class startScene extends Phaser.Scene {
                 startButton.destroy();
                 gameOption.platforms.clear(true);
                 gameOption.player.destroy();
-                // gameOption.cursors = null;
+                gameOption.cursors = null;
                 gameOption.stars.destroy();
                 gameOption.scoreText.destroy();
                 gameOption.bombs.destroy();
@@ -92,7 +92,69 @@ export class startScene extends Phaser.Scene {
             }
             console.log(gameOption.platforms.children.size)
         }
-        // 创建操作按钮
+        // keybroad for contral
+    createKeyContral() {
+        if (gameOption.gameOver) return;
+
+
+        this.input.keyboard.on('keydown_UP', function(event) {
+
+            if (gameOption.player.body.touching.down) {
+                gameOption.player.setVelocityY(-330);
+            }
+
+
+        });
+        this.input.keyboard.on('keydown_LEFT', function(event) {
+            if (gameOption.gameOver) return;
+
+            gameOption.player.setVelocityX(-160);
+            gameOption.player.anims.play('left', true);
+
+
+        });
+        this.input.keyboard.on('keydown_RIGHT', function(event) {
+            if (gameOption.gameOver) return;
+
+            gameOption.player.setVelocityX(160);
+            gameOption.player.anims.play('right', true);
+
+
+        });
+        this.input.keyboard.on('keyup', function(event) {
+
+            gameOption.player.setVelocityX(0);
+            gameOption.player.anims.play('turn');
+
+
+        });
+
+
+
+        // gameOption.cursors = this.input.keyboard.createCursorKeys();
+        // if (gameOption.gameOver) return;
+        // if (gameOption.cursors.left.isDown) {
+        //     gameOption.player.setVelocityX(-160);
+
+        //     gameOption.player.anims.play('left', true);
+        // }
+        // if (gameOption.cursors.right.isDown) {
+        //     gameOption.player.setVelocityX(160);
+
+        //     gameOption.player.anims.play('right', true);
+        // }
+        // if (gameOption.cursors.right.isDown){
+        //     gameOption.player.setVelocityX(0);
+        //     gameOption.player.anims.play('turn');
+        // }
+
+        // if (gameOption.cursors.up.isDown && gameOption.player.body.touching.down) {
+        //     gameOption.player.setVelocityY(-330);
+        // }
+    }
+
+
+    // 创建操作按钮
     createButton() {
         let hitArea = new Phaser.Geom.Rectangle(-48, -48, gameOption.width / 3, gameOption.height * 0.3)
         let leftButton = this.add.image(0, 0, 'leftB').setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
@@ -104,7 +166,7 @@ export class startScene extends Phaser.Scene {
             cellWidth: (gameOption.width - 144) / 2,
             cellHeight: 48,
             x: 120,
-            y: this.bottomY + this.bottomY * 0.25
+            y: this.bottomY + this.bottomY * 0.2
         });
         //操作
         this.input.addPointer(1)
@@ -117,12 +179,8 @@ export class startScene extends Phaser.Scene {
 
         });
         upButton.on('pointerup', () => {
-
-
             gameOption.player.setVelocityX(0);
             gameOption.player.anims.play('turn');
-
-
         });
         leftButton.on('pointerdown', () => {
             if (gameOption.gameOver) return;
@@ -155,6 +213,7 @@ export class startScene extends Phaser.Scene {
 
             this.createPlatforms();
             this.createButton();
+            this.createKeyContral();
             // 创建精灵
             gameOption.player = this.physics.add.sprite(100, this.bottomY - 160, 'dude');
             gameOption.player.setBounceY(0.3); //反弹
@@ -215,29 +274,6 @@ export class startScene extends Phaser.Scene {
         //
 
     update() {
-        if (gameOption.gameOver) return;
-
-        // gameOption.cursors = this.input.keyboard.createCursorKeys();
-
-        //     if (gameOption.gameOver) return;
-        //     if (gameOption.cursors.left.isDown) {
-        //         gameOption.player.setVelocityX(-160);
-
-        //         gameOption.player.anims.play('left', true);
-        //     } else if (gameOption.cursors.right.isDown) {
-        //         gameOption.player.setVelocityX(160);
-
-        //         gameOption.player.anims.play('right', true);
-        //     } else {
-        //         gameOption.player.setVelocityX(0);
-
-        //         gameOption.player.anims.play('turn');
-        //     }
-
-        //     if (gameOption.cursors.up.isDown && gameOption.player.body.touching.down) {
-        //         gameOption.player.setVelocityY(-330);
-        //     }
-        // }
 
 
     }
