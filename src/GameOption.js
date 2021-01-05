@@ -8,8 +8,10 @@ export let gameOption = {
         stars: null,
         scoreText: null,
         bombs: null,
-        width: 640,
+        width: 2000,
         height: 360,
+        camerasWidth: 640,
+        camerasHeight: 360,
         //载入游戏进度
         loadProgress() {
             let width = this.cameras.main.width;
@@ -46,8 +48,8 @@ export let gameOption = {
         },
         // 响应式设置场景
         getScreenSize() {
-            this.width = window.innerWidth;
-            this.height = window.innerHeight;
+            this.camerasWidth = window.innerWidth;
+            this.camerasHeight = this.height = window.innerHeight;
 
         }
     }

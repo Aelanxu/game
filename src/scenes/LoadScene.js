@@ -29,7 +29,7 @@ export class loadScene extends Phaser.Scene {
     create() {
         let bg = this.add.image(gameOption.width / 2, gameOption.height / 2, 'sky');
         let title = this.add.image(gameOption.width / 2, 100, 'title');
-        let startButton = this.add.image(gameOption.width / 2, gameOption.height - 200, 'start').setInteractive();
+        let startButton = this.add.image(gameOption.camerasWidth / 2, gameOption.height - 200, 'start').setInteractive();
         startButton.on('pointerdown', (pointer) => {
             title.destroy();
             startButton.destroy();

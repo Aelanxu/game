@@ -204,8 +204,12 @@ export class startScene extends Phaser.Scene {
 
     }
     create() {
+            this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
+            // 初始化主角位置
+            gameOption.createSprite(this, 100, this.bottomY - 160, 'dude')
+            this.cameras.main.startFollow(gameOption.player);
             gameOption.platforms = this.physics.add.staticGroup();
-            let bg = this.add.image(gameOption.width / 2, this.bottomY / 2, 'sky');
+            let bg = this.add.image(0, 0, 'sky').setOrigin(0);
             bg.setScale(1.5);
 
             gameOption.ground = this.physics.add.staticGroup();
@@ -214,8 +218,7 @@ export class startScene extends Phaser.Scene {
             this.createPlatforms();
             this.createButton();
             this.createKeyContral();
-            // 初始化主角位置
-            gameOption.createSprite(this, 100, this.bottomY - 160, 'dude')
+
 
             //监测碰撞
             this.physics.add.collider(gameOption.player, gameOption.ground);
