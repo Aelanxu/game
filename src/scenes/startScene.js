@@ -86,7 +86,7 @@ export class startScene extends Phaser.Scene {
             gameOption.platforms.children.iterate(function(child) {
                 child.body.allowGravity = false;
             })
-            if (gameOption.platforms.children.size < 3) {
+            if (gameOption.platforms.children.size < 6) {
                 this.createPlatforms()
 
             }
@@ -204,16 +204,18 @@ export class startScene extends Phaser.Scene {
 
     }
     create() {
-            this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
-            // 初始化主角位置
-            gameOption.createSprite(this, 100, this.bottomY - 160, 'dude')
-            this.cameras.main.startFollow(gameOption.player);
-            gameOption.platforms = this.physics.add.staticGroup();
             let bg = this.add.image(0, 0, 'sky').setOrigin(0);
             bg.setScale(1.5);
+            this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
+            this.cameras.main.setBounds(0, 0, gameOption.width, this.bottomY);
+            // 初始化主角位置
+            gameOption.createSprite(this, 100, this.bottomY - 360, 'dude')
+            this.cameras.main.startFollow(gameOption.player);
+            gameOption.platforms = this.physics.add.staticGroup();
+
 
             gameOption.ground = this.physics.add.staticGroup();
-            gameOption.ground.create(gameOption.width / 2, this.bottomY, 'ground').refreshBody();
+            gameOption.ground.create(0, this.bottomY, 'ground').refreshBody();
 
             this.createPlatforms();
             this.createButton();
