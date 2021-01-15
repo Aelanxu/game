@@ -3,6 +3,7 @@ export class startScene extends Phaser.Scene {
     constructor() {
         super("startScene");
         this.bottomY = gameOption.height - gameOption.height * 0.3; // 地面离屏幕下边缘的距离
+        this.map = null;
 
     }
 
@@ -98,8 +99,8 @@ export class startScene extends Phaser.Scene {
 
 
         this.input.keyboard.on('keydown_UP', function(event) {
-
-            if (gameOption.player.body.touching.down) {
+            //gameOption.player.body.touching.down
+            if (gameOption.player.body.blocked.down) {
                 gameOption.player.setVelocityY(-330);
             }
 
@@ -204,27 +205,39 @@ export class startScene extends Phaser.Scene {
 
     }
     create() {
-            let bg = this.add.image(0, 0, 'sky').setOrigin(0);
-            bg.setScale(1.5);
+            // let bg = this.add.image(0, 0, 'sky').setOrigin(0);
+            // bg.setScale(1.5);
+            this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
+
+            let tileset = this.map.addTilesetImage('tiles');
+            let groundLayer = this.map.createStaticLayer('ground', tileset, 0, 0);
+            // 初始化主角
+            gameOption.createSprite(this, 100, this.bottomY - 360, 'dude')
+                //  This isn't totally accurate, but it'll do for now
+            console.log(groundLayer)
+            this.map.setCollision([1, 33])
+            this.physics.add.collider(gameOption.player, groundLayer);
+            //this.physics.world.collideSpriteVsTilemapLayer(gameOption.player, groundLayer);
+
             this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
             this.cameras.main.setBounds(0, 0, gameOption.width, this.bottomY);
-            // 初始化主角位置
-            gameOption.createSprite(this, 100, this.bottomY - 360, 'dude')
+
+
             this.cameras.main.startFollow(gameOption.player);
-            gameOption.platforms = this.physics.add.staticGroup();
+            // gameOption.platforms = this.physics.add.staticGroup();
 
 
-            gameOption.ground = this.physics.add.staticGroup();
-            gameOption.ground.create(0, this.bottomY, 'ground').refreshBody();
+            //gameOption.ground = this.physics.add.staticGroup();
+            //gameOption.ground.create(0, this.bottomY, 'ground').refreshBody();
 
-            this.createPlatforms();
+            //  this.createPlatforms();
             this.createButton();
             this.createKeyContral();
 
 
             //监测碰撞
-            this.physics.add.collider(gameOption.player, gameOption.ground);
-            this.physics.add.collider(gameOption.player, gameOption.platforms);
+            // this.physics.add.collider(gameOption.player, gameOption.ground);
+            // this.physics.add.collider(gameOption.player, gameOption.platforms);
 
 
             //创建星星

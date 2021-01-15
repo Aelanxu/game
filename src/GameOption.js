@@ -8,7 +8,7 @@ export let gameOption = {
         stars: null,
         scoreText: null,
         bombs: null,
-        width: 2000,
+        width: 1600,
         height: 360,
         camerasWidth: 640,
         camerasHeight: 360,
