@@ -1,3 +1,5 @@
+import { Player } from './player/player';
+import { Enimy } from './enimy/enimies';
 export let gameOption = {
         score: 0,
         gameOver: false,
@@ -7,11 +9,12 @@ export let gameOption = {
         cursors: null,
         stars: null,
         scoreText: null,
-        bombs: null,
+        animy: null,
         width: 1600,
         height: 360,
         camerasWidth: 640,
         camerasHeight: 360,
+
         //载入游戏进度
         loadProgress() {
             let width = this.cameras.main.width;
@@ -52,12 +55,15 @@ export let gameOption = {
             this.camerasHeight = this.height = window.innerHeight;
 
         }
+        //创建敌人
     }
     //  创建游戏角色动画
 gameOption.createSprite = function(scene, x, y, playName) {
+
         this.player = scene.physics.add.sprite(x, y, playName);
-        this.player.setBounceY(0.3); //物理反弹参数设置
-        this.player.setCollideWorldBounds(true);
+        this.player.setBounceY(Player.bounce); //物理反弹参数设置
+        this.player.setCollideWorldBounds(Player.setCollideWorldBounds);
+
         scene.anims.create({
             key: 'left',
             frames: scene.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -76,6 +82,11 @@ gameOption.createSprite = function(scene, x, y, playName) {
             frameRate: 10,
             repeat: -1
         });
+        this.player.play('turn')
 
     }
-    // 创建星星
+    // 创建敌人
+gameOption.createEnimy = function(scene, name) {
+    return new Enimy(scene, name);
+
+}

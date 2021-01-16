@@ -1,9 +1,11 @@
 import { gameOption } from '../gameOption'
+
 export class startScene extends Phaser.Scene {
     constructor() {
         super("startScene");
         this.bottomY = gameOption.height - gameOption.height * 0.3; // 地面离屏幕下边缘的距离
         this.map = null;
+
 
     }
 
@@ -30,18 +32,18 @@ export class startScene extends Phaser.Scene {
             gameOption.scoreText.setText('Score: ' + gameOption.score);
         }
         //监测炸弹爆炸
-    hitBomb(player, bomb) {
+        // hitBomb(player, bomb) {
 
-            this.physics.pause();
+    //         this.physics.pause();
 
-            player.setTint(0xff0000);
+    //         player.setTint(0xff0000);
 
-            player.anims.play('turn');
-            this.gameOver();
+    //         player.anims.play('turn');
+    //         this.gameOver();
 
 
-        }
-        // 游戏结束
+    //     }
+    // 游戏结束
     gameOver() {
             gameOption.gameOver = true;
             gameOption.score = 0;
@@ -61,163 +63,158 @@ export class startScene extends Phaser.Scene {
             })
         }
         //炸弹部署
-    setBombs(player) {
-            let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+        // setBombs(player) {
+        //         let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
-            let bomb = gameOption.bombs.create(x, 16, 'bomb');
-            bomb.setBounce(1);
-            bomb.setCollideWorldBounds(true);
-            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-        }
-        //创建地板
-    createPlatforms() {
-            //地面的固定位置
-            let rx = Phaser.Math.Between(0, 2) * 20;
-            let rd = Phaser.Math.Between(1, 2) * 30;
-            let ld = Phaser.Math.Between(1, 3) * 40;
-            let md = Phaser.Math.Between(0, 2) * 20;
-            let pY = this.bottomY - 150;
+    //         let bomb = gameOption.bombs.create(x, 16, 'bomb');
+    //         bomb.setBounce(1);
+    //         bomb.setCollideWorldBounds(true);
+    //         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    //     }
+    //创建地板
+    // createPlatforms() {
+    //         //地面的固定位置
+    //         let rx = Phaser.Math.Between(0, 2) * 20;
+    //         let rd = Phaser.Math.Between(1, 2) * 30;
+    //         let ld = Phaser.Math.Between(1, 3) * 40;
+    //         let md = Phaser.Math.Between(0, 2) * 20;
+    //         let pY = this.bottomY - 150;
 
 
-            console.log('y' + rx)
+    //         console.log('y' + rx)
 
-            gameOption.platforms.create(50 - rx, pY - ld, 'platform');
-            gameOption.platforms.create(gameOption.width / 2, pY - md, 'platform');
-            gameOption.platforms.create(gameOption.width - 50 + rx, pY - rd, 'platform');
-            gameOption.platforms.children.iterate(function(child) {
-                child.body.allowGravity = false;
-            })
-            if (gameOption.platforms.children.size < 6) {
-                this.createPlatforms()
+    //         gameOption.platforms.create(50 - rx, pY - ld, 'platform');
+    //         gameOption.platforms.create(gameOption.width / 2, pY - md, 'platform');
+    //         gameOption.platforms.create(gameOption.width - 50 + rx, pY - rd, 'platform');
+    //         gameOption.platforms.children.iterate(function(child) {
+    //             child.body.allowGravity = false;
+    //         })
+    //         if (gameOption.platforms.children.size < 6) {
+    //             this.createPlatforms()
 
-            }
-            console.log(gameOption.platforms.children.size)
-        }
-        // keybroad for contral
+    //         }
+    //         console.log(gameOption.platforms.children.size)
+    //     }
+    // keybroad for contral
     createKeyContral() {
         if (gameOption.gameOver) return;
 
 
         this.input.keyboard.on('keydown_UP', function(event) {
-            //gameOption.player.body.touching.down
-            if (gameOption.player.body.blocked.down) {
-                gameOption.player.setVelocityY(-330);
+
+
+
+        });
+        this.input.keyboard.on('keydown', function(event) {
+            if (gameOption.gameOver) return;
+            if (event.key === "ArrowLeft") {
+                gameOption.player.setVelocityX(-160);
+                gameOption.player.anims.play('left', true);
+            } else if (event.key === "ArrowRight") {
+                if (gameOption.gameOver) return;
+
+                gameOption.player.setVelocityX(160);
+                gameOption.player.anims.play('right', true);
+
+            } else if (event.key === "ArrowUp") {
+                //gameOption.player.body.touching.down
+
+                if (gameOption.player.body.blocked.down) {
+                    gameOption.player.setVelocityY(-330);
+
+                }
+
             }
 
 
         });
-        this.input.keyboard.on('keydown_LEFT', function(event) {
-            if (gameOption.gameOver) return;
 
-            gameOption.player.setVelocityX(-160);
-            gameOption.player.anims.play('left', true);
-
-
-        });
-        this.input.keyboard.on('keydown_RIGHT', function(event) {
-            if (gameOption.gameOver) return;
-
-            gameOption.player.setVelocityX(160);
-            gameOption.player.anims.play('right', true);
-
-
-        });
         this.input.keyboard.on('keyup', function(event) {
 
             gameOption.player.setVelocityX(0);
             gameOption.player.anims.play('turn');
 
 
+
         });
 
 
 
-        // gameOption.cursors = this.input.keyboard.createCursorKeys();
-        // if (gameOption.gameOver) return;
-        // if (gameOption.cursors.left.isDown) {
-        //     gameOption.player.setVelocityX(-160);
 
-        //     gameOption.player.anims.play('left', true);
-        // }
-        // if (gameOption.cursors.right.isDown) {
-        //     gameOption.player.setVelocityX(160);
-
-        //     gameOption.player.anims.play('right', true);
-        // }
-        // if (gameOption.cursors.right.isDown){
-        //     gameOption.player.setVelocityX(0);
-        //     gameOption.player.anims.play('turn');
-        // }
-
-        // if (gameOption.cursors.up.isDown && gameOption.player.body.touching.down) {
-        //     gameOption.player.setVelocityY(-330);
-        // }
     }
 
 
     // 创建操作按钮
-    createButton() {
-        let hitArea = new Phaser.Geom.Rectangle(-48, -48, gameOption.width / 3, gameOption.height * 0.3)
-        let leftButton = this.add.image(0, 0, 'leftB').setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
-        let upButton = this.add.image(0, 0, 'upB').setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
-        let rightButton = this.add.image(0, 0, 'rightB').setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
-        Phaser.Actions.GridAlign([leftButton, upButton, rightButton], {
-            width: 3,
-            height: 1,
-            cellWidth: (gameOption.width - 166) / 2,
-            cellHeight: 48,
-            x: 124,
-            y: this.bottomY + this.bottomY * 0.2
-        });
-        //操作
-        this.input.addPointer(1)
+    // createButton() {
+    //     let hitArea = new Phaser.Geom.Rectangle(-48, -48, gameOption.width / 3, gameOption.height * 0.3)
+    //     let leftButton = this.add.image(0, 0, 'leftB').setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+    //     let upButton = this.add.image(0, 0, 'upB').setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+    //     let rightButton = this.add.image(0, 0, 'rightB').setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+    //     Phaser.Actions.GridAlign([leftButton, upButton, rightButton], {
+    //         width: 3,
+    //         height: 1,
+    //         cellWidth: (gameOption.width - 166) / 2,
+    //         cellHeight: 48,
+    //         x: 124,
+    //         y: this.bottomY + this.bottomY * 0.2
+    //     });
+    //     //操作
+    //     this.input.addPointer(1)
 
-        upButton.on('pointerdown', () => {
+    //     upButton.on('pointerdown', () => {
 
-            if (gameOption.player.body.touching.down) {
-                gameOption.player.setVelocityY(-330);
-            }
+    //         if (gameOption.player.body.touching.down) {
+    //             gameOption.player.setVelocityY(-330);
+    //         }
 
-        });
-        upButton.on('pointerup', () => {
-            gameOption.player.setVelocityX(0);
-            gameOption.player.anims.play('turn');
-        });
-        leftButton.on('pointerdown', () => {
-            if (gameOption.gameOver) return;
-            gameOption.player.setVelocityX(-160);
-            gameOption.player.anims.play('left', true);
-            //leftButton.setTint(0x44ff44);
-        });
-        leftButton.on('pointerup', () => {
-            gameOption.player.setVelocityX(0);
-            gameOption.player.anims.play('turn');
-        });
-        rightButton.on('pointerdown', () => {
-            if (gameOption.gameOver) return;
-            gameOption.player.setVelocityX(160);
-            gameOption.player.anims.play('right', true);
-        });
-        rightButton.on('pointerup', () => {
-            gameOption.player.setVelocityX(0);
-            gameOption.player.anims.play('turn');
-        });
+    //     });
+    //     upButton.on('pointerup', () => {
+    //         gameOption.player.setVelocityX(0);
+    //         gameOption.player.anims.play('turn');
+    //     });
+    //     leftButton.on('pointerdown', () => {
+    //         if (gameOption.gameOver) return;
+    //         gameOption.player.setVelocityX(-160);
+    //         gameOption.player.anims.play('left', true);
+    //         //leftButton.setTint(0x44ff44);
+    //     });
+    //     leftButton.on('pointerup', () => {
+    //         gameOption.player.setVelocityX(0);
+    //         gameOption.player.anims.play('turn');
+    //     });
+    //     rightButton.on('pointerdown', () => {
+    //         if (gameOption.gameOver) return;
+    //         gameOption.player.setVelocityX(160);
+    //         gameOption.player.anims.play('right', true);
+    //     });
+    //     rightButton.on('pointerup', () => {
+    //         gameOption.player.setVelocityX(0);
+    //         gameOption.player.anims.play('turn');
+    //     });
 
-    }
+    // }
     create() {
-            // let bg = this.add.image(0, 0, 'sky').setOrigin(0);
+
+
             // bg.setScale(1.5);
             this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
 
             let tileset = this.map.addTilesetImage('tiles');
-            let groundLayer = this.map.createStaticLayer('ground', tileset, 0, 0);
+            let bg = this.map.createLayer('bg', tileset, 0, 0);
+            let groundLayer = this.map.createLayer('ground', tileset, 0, 0);
             // 初始化主角
+
             gameOption.createSprite(this, 100, this.bottomY - 360, 'dude')
-                //  This isn't totally accurate, but it'll do for now
-            console.log(groundLayer)
+                //  设置碰撞
+
             this.map.setCollision([1, 33])
             this.physics.add.collider(gameOption.player, groundLayer);
             //this.physics.world.collideSpriteVsTilemapLayer(gameOption.player, groundLayer);
+            let createEnimies = gameOption.createEnimy(this, 'enimy1');
+            createEnimies.createAnims('enimy1')
+            gameOption.enimy = createEnimies.createSprite(200, this.bottomY - 360)
+            this.physics.add.collider(gameOption.enimy, groundLayer);
+            this.physics.add.collider(gameOption.player, gameOption.enimy);
 
             this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
             this.cameras.main.setBounds(0, 0, gameOption.width, this.bottomY);
@@ -231,34 +228,35 @@ export class startScene extends Phaser.Scene {
             //gameOption.ground.create(0, this.bottomY, 'ground').refreshBody();
 
             //  this.createPlatforms();
-            this.createButton();
+            //  this.createButton();
             this.createKeyContral();
 
 
+            //this.physics.add.collider(gameOption.enimy, groundLayer);
             //监测碰撞
             // this.physics.add.collider(gameOption.player, gameOption.ground);
             // this.physics.add.collider(gameOption.player, gameOption.platforms);
 
 
             //创建星星
-            gameOption.stars = this.physics.add.group({
-                key: 'star',
-                repeat: 9,
-                setXY: { x: 14, y: 0, stepX: gameOption.width / 10 }
-            });
-            gameOption.stars.children.iterate(function(child) {
+            // gameOption.stars = this.physics.add.group({
+            //     key: 'star',
+            //     repeat: 9,
+            //     setXY: { x: 14, y: 0, stepX: gameOption.width / 10 }
+            // });
+            // gameOption.stars.children.iterate(function(child) {
 
-                child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+            //     child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
-            });
-            this.physics.add.collider(gameOption.stars, gameOption.platforms);
-            this.physics.add.collider(gameOption.stars, gameOption.ground);
-            this.physics.add.overlap(gameOption.player, gameOption.stars, this.collectStar, null, this);
+            // });
+            // this.physics.add.collider(gameOption.stars, gameOption.platforms);
+            //this.physics.add.collider(gameOption.stars, groundLayer);
+            // this.physics.add.overlap(gameOption.player, gameOption.stars, this.collectStar, null, this);
             // 创建炸弹
-            gameOption.bombs = this.physics.add.group();
-            this.physics.add.collider(gameOption.bombs, gameOption.platforms);
-            this.physics.add.collider(gameOption.bombs, gameOption.ground);
-            this.physics.add.collider(gameOption.player, gameOption.bombs, this.hitBomb, null, this);
+            // gameOption.bombs = this.physics.add.group();
+            // this.physics.add.collider(gameOption.bombs, gameOption.platforms);
+            // this.physics.add.collider(gameOption.bombs, gameOption.ground);
+            // this.physics.add.collider(gameOption.player, gameOption.bombs, this.hitBomb, null, this);
 
 
 
@@ -273,7 +271,45 @@ export class startScene extends Phaser.Scene {
         }
         //
 
-    update() {
+    update(time, delta) {
+
+
+        let player_x = gameOption.player.x;
+        let enimy_x = gameOption.enimy.x;
+        let distend = player_x - enimy_x;
+        // let keys = ['walk', 'idle', 'kick', 'punch', 'jump', 'jumpkick', 'win', 'die'] 
+        let skill = ['kick', 'punch', 'jumpkick'];
+
+
+        if (Math.abs(distend) <= 40) {
+
+            gameOption.enimy.setVelocityX(0);
+            let rand = Math.abs(distend);
+            console.log(rand)
+            let n = 0;
+            switch (true) {
+                case rand > 30:
+                    n = 0
+                    break;
+                case rand > 20:
+                    n = 2
+                    break;
+                case rand > 10:
+                    n = 1
+                    break;
+            }
+            gameOption.enimy.anims.play(skill[n], true);
+
+        } else if (distend < 0) {
+            gameOption.enimy.flipX = false;
+            gameOption.enimy.setVelocityX(-80);
+            gameOption.enimy.play('walk', true);
+
+        } else {
+            gameOption.enimy.setVelocityX(80);
+            gameOption.enimy.play('walk', true)
+            gameOption.enimy.flipX = true;
+        }
 
 
     }
