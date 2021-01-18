@@ -108,13 +108,21 @@ export class startScene extends Phaser.Scene {
         this.input.keyboard.on('keydown', function(event) {
             if (gameOption.gameOver) return;
             if (event.key === "ArrowLeft") {
+                if (!gameOption.player.flipX) {
+                    gameOption.player.flipX = true;
+                }
                 gameOption.player.setVelocityX(-160);
-                gameOption.player.anims.play('left', true);
+                gameOption.player.anims.play('run', true);
+
+                // gameOption.player.flipX 
+                console.log(gameOption.player.flipX)
             } else if (event.key === "ArrowRight") {
                 if (gameOption.gameOver) return;
-
+                if (gameOption.player.flipX) {
+                    gameOption.player.flipX = false;
+                }
                 gameOption.player.setVelocityX(160);
-                gameOption.player.anims.play('right', true);
+                gameOption.player.anims.play('run', true);
 
             } else if (event.key === "ArrowUp") {
                 //gameOption.player.body.touching.down
@@ -132,7 +140,7 @@ export class startScene extends Phaser.Scene {
         this.input.keyboard.on('keyup', function(event) {
 
             gameOption.player.setVelocityX(0);
-            gameOption.player.anims.play('turn');
+            gameOption.player.anims.play('idle', true);
 
 
 
@@ -203,15 +211,16 @@ export class startScene extends Phaser.Scene {
             let bg = this.map.createLayer('bg', tileset, 0, 0);
             let groundLayer = this.map.createLayer('ground', tileset, 0, 0);
             // 初始化主角
-
-            gameOption.createSprite(this, 100, this.bottomY - 360, 'dude')
+            let createPlayer = gameOption.createPlayer(this, 'dude', 1);
+            gameOption.player = createPlayer.createSprite(100, this.bottomY - 360, 'dude')
                 //  设置碰撞
 
             this.map.setCollision([1, 33])
             this.physics.add.collider(gameOption.player, groundLayer);
             //this.physics.world.collideSpriteVsTilemapLayer(gameOption.player, groundLayer);
-            let createEnimies = gameOption.createEnimy(this, 'enimy1');
-            createEnimies.createAnims('enimy1')
+            // 创建敌人
+            let createEnimies = gameOption.createEnimy(this, 'enimy1', 2);
+
             gameOption.enimy = createEnimies.createSprite(200, this.bottomY - 360)
             this.physics.add.collider(gameOption.enimy, groundLayer);
             this.physics.add.collider(gameOption.player, gameOption.enimy);
@@ -285,7 +294,7 @@ export class startScene extends Phaser.Scene {
 
             gameOption.enimy.setVelocityX(0);
             let rand = Math.abs(distend);
-            console.log(rand)
+            //console.log(rand)
             let n = 0;
             switch (true) {
                 case rand > 30:
