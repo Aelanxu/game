@@ -11,8 +11,6 @@ export class Add {
         sprite.setBounce(0.3)
         sprite.setCollideWorldBounds(true);
         this.createAnims(this.scene, this.name);
-
-        sprite.setOrigin(0, 0)
         return sprite;
 
     }

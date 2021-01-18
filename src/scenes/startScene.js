@@ -213,7 +213,8 @@ export class startScene extends Phaser.Scene {
                 // 初始化主角
 
             let createPlayer = gameOption.createSpriteFactory(this, 'renzhe', 1);
-            gameOption.player = createPlayer.createSprite(300, this.bottomY - 360, 'renzhe')
+            gameOption.player = createPlayer.createSprite(300, this.bottomY - 360, 'renzhe');
+
             gameOption.player.play('idle')
             console.log(gameOption.player.displayOriginY);
             console.log(gameOption.player.displayOriginX);
@@ -227,6 +228,7 @@ export class startScene extends Phaser.Scene {
             let createEnimies = gameOption.createSpriteFactory(this, 'enimy1', 2);
             gameOption.enimy = createEnimies.createSprite(200, this.bottomY - 160, 'enimy1');
             gameOption.enimy.play('idle')
+            console.log(gameOption.enimy);
             this.physics.add.collider(gameOption.enimy, groundLayer);
             this.physics.add.collider(gameOption.player, gameOption.enimy);
 

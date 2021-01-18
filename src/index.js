@@ -15,7 +15,7 @@ window.onload = () => {
             default: 'arcade',
             arcade: {
                 gravity: { y: 350 },
-                debug: false
+                debug: true
             }
 
         },
