@@ -57,35 +57,35 @@ export let gameOption = {
         }
         //创建敌人
     }
-    //  创建游戏角色动画
-    // gameOption.createSprite = function(scene, x, y, playName) {
+    // 创建游戏角色动画
+gameOption.createSprite = function(scene, x, y, playName) {
 
-//         this.player = scene.physics.add.sprite(x, y, playName);
-//         this.player.setBounceY(Player.bounce); //物理反弹参数设置
-//         this.player.setCollideWorldBounds(Player.setCollideWorldBounds);
+        this.player = scene.physics.add.sprite(x, y, playName);
+        this.player.setBounceY(Player.bounce); //物理反弹参数设置
+        this.player.setCollideWorldBounds(Player.setCollideWorldBounds);
 
-//         scene.anims.create({
-//             key: 'left',
-//             frames: scene.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-//             frameRate: 10,
-//             repeat: -1
-//         });
-//         scene.anims.create({
-//             key: 'turn',
-//             frames: [{ key: 'dude', frame: 4 }],
-//             frameRate: 20
-//         });
+        scene.anims.create({
+            key: 'left',
+            frames: scene.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        scene.anims.create({
+            key: 'turn',
+            frames: [{ key: 'dude', frame: 4 }],
+            frameRate: 20
+        });
 
-//         scene.anims.create({
-//             key: 'right',
-//             frames: scene.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-//             frameRate: 10,
-//             repeat: -1
-//         });
-//         this.player.play('turn')
+        scene.anims.create({
+            key: 'right',
+            frames: scene.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.player.play('turn')
 
-//     }
-// 创建玩家
+    }
+    // 创建玩家
 gameOption.createPlayer = function(scene, name, type) {
         return new Add(scene, name, type);
     }

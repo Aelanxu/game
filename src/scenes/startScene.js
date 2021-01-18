@@ -112,7 +112,7 @@ export class startScene extends Phaser.Scene {
                     gameOption.player.flipX = true;
                 }
                 gameOption.player.setVelocityX(-160);
-                gameOption.player.anims.play('run', true);
+                gameOption.player.anims.play('left', true);
 
                 // gameOption.player.flipX 
                 console.log(gameOption.player.flipX)
@@ -122,7 +122,7 @@ export class startScene extends Phaser.Scene {
                     gameOption.player.flipX = false;
                 }
                 gameOption.player.setVelocityX(160);
-                gameOption.player.anims.play('run', true);
+                gameOption.player.anims.play('right', true);
 
             } else if (event.key === "ArrowUp") {
                 //gameOption.player.body.touching.down
@@ -207,17 +207,19 @@ export class startScene extends Phaser.Scene {
             // bg.setScale(1.5);
             this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
 
-            let tileset = this.map.addTilesetImage('tiles');
+            let tileset = this.map.addTilesetImage('tiles')
             let bg = this.map.createLayer('bg', tileset, 0, 0);
-            let groundLayer = this.map.createLayer('ground', tileset, 0, 0);
-            // 初始化主角
-            let createPlayer = gameOption.createPlayer(this, 'dude', 1);
-            gameOption.player = createPlayer.createSprite(100, this.bottomY - 360, 'dude')
-                //  设置碰撞
+            let groundLayer = this.map.createLayer('ground', tileset, 0, 0)
+                // 初始化主角
+            gameOption.createSprite(this, 100, this.bottomY - 360, 'dude')
+                // let createPlayer = gameOption.createPlayer(this, 'dude', 1);
+                // gameOption.player = createPlayer.createSprite(300, this.bottomY - 360, 'dude')
+
+            //  设置碰撞
 
             this.map.setCollision([1, 33])
             this.physics.add.collider(gameOption.player, groundLayer);
-            //this.physics.world.collideSpriteVsTilemapLayer(gameOption.player, groundLayer);
+            this.physics.world.collideSpriteVsTilemapLayer(gameOption.player, groundLayer);
             // 创建敌人
             let createEnimies = gameOption.createEnimy(this, 'enimy1', 2);
 

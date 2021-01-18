@@ -66,14 +66,14 @@ const animations = {
         return {
             idle: {
                 key: 'idle',
-                frames: scene.anims.generateFrameNames(name, { prefix: 'idle/frame', start: 0, end: 4, zeroPad: 4 }),
-                frameRate: 8,
+                frames: scene.anims.generateFrameNames(name, { prefix: 'Idle__', start: 0, end: 9, suffix: '.png', zeroPad: 3 }),
+                frameRate: 20,
                 repeat: -1
             },
             run: {
                 key: 'run',
-                frames: scene.anims.generateFrameNames(name, { prefix: 'run/frame', start: 0, end: 5, zeroPad: 4 }),
-                frameRate: 8,
+                frames: scene.anims.generateFrameNames(name, { prefix: 'Run__', start: 0, end: 9, suffix: '.png', zeroPad: 3 }),
+                frameRate: 30,
                 repeat: -1
             },
         }
