@@ -21,7 +21,7 @@ const animations = {
                 frames: scene.anims.generateFrameNumbers(name, { frames: [10, 11, 12, 13, 10] }),
                 frameRate: 8,
                 repeat: -1,
-                repeatDelay: 2000,
+                repeatDelay: 0,
                 duration: 2000,
             },
             punch: {
@@ -29,7 +29,7 @@ const animations = {
                 frames: scene.anims.generateFrameNumbers(name, { frames: [15, 16, 17, 18, 17, 15] }),
                 frameRate: 8,
                 repeat: -1,
-                repeatDelay: 2000,
+                repeatDelay: 0,
                 duration: 2000,
             },
             jump: {
@@ -43,7 +43,7 @@ const animations = {
                 frames: scene.anims.generateFrameNumbers(name, { frames: [20, 21, 22, 23, 25, 23, 22, 21] }),
                 frameRate: 8,
                 repeat: -1,
-                repeatDelay: 2000,
+                repeatDelay: 0,
                 duration: 2000,
             },
             win: {
@@ -51,7 +51,7 @@ const animations = {
                 frames: scene.anims.generateFrameNumbers(name, { frames: [30, 31] }),
                 frameRate: 8,
                 repeat: -1,
-                repeatDelay: 2000
+                repeatDelay: 0
             },
             die: {
                 key: 'die',

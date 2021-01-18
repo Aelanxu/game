@@ -6,11 +6,13 @@ export class Add {
         this.type = type;
     };
     createSprite(x = 0, y = 0) {
-
-        let sprite = this.scene.physics.add.sprite(x, y, this.keyName);
+        let sprite = null;
+        sprite = this.scene.physics.add.sprite(x, y, this.name)
         sprite.setBounce(0.3)
         sprite.setCollideWorldBounds(true);
         this.createAnims(this.scene, this.name);
+
+        sprite.setOrigin(0, 0)
         return sprite;
 
     }

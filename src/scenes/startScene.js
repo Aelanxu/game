@@ -112,7 +112,7 @@ export class startScene extends Phaser.Scene {
                     gameOption.player.flipX = true;
                 }
                 gameOption.player.setVelocityX(-160);
-                gameOption.player.anims.play('left', true);
+                gameOption.player.anims.play('run', true);
 
                 // gameOption.player.flipX 
                 console.log(gameOption.player.flipX)
@@ -122,7 +122,7 @@ export class startScene extends Phaser.Scene {
                     gameOption.player.flipX = false;
                 }
                 gameOption.player.setVelocityX(160);
-                gameOption.player.anims.play('right', true);
+                gameOption.player.anims.play('run', true);
 
             } else if (event.key === "ArrowUp") {
                 //gameOption.player.body.touching.down
@@ -211,19 +211,22 @@ export class startScene extends Phaser.Scene {
             let bg = this.map.createLayer('bg', tileset, 0, 0);
             let groundLayer = this.map.createLayer('ground', tileset, 0, 0)
                 // 初始化主角
-            gameOption.createSprite(this, 100, this.bottomY - 360, 'dude')
-                // let createPlayer = gameOption.createPlayer(this, 'dude', 1);
-                // gameOption.player = createPlayer.createSprite(300, this.bottomY - 360, 'dude')
 
+            let createPlayer = gameOption.createSpriteFactory(this, 'renzhe', 1);
+            gameOption.player = createPlayer.createSprite(300, this.bottomY - 360, 'renzhe')
+            gameOption.player.play('idle')
+            console.log(gameOption.player.displayOriginY);
+            console.log(gameOption.player.displayOriginX);
             //  设置碰撞
 
             this.map.setCollision([1, 33])
             this.physics.add.collider(gameOption.player, groundLayer);
-            this.physics.world.collideSpriteVsTilemapLayer(gameOption.player, groundLayer);
-            // 创建敌人
-            let createEnimies = gameOption.createEnimy(this, 'enimy1', 2);
 
-            gameOption.enimy = createEnimies.createSprite(200, this.bottomY - 360)
+
+            // 创建敌人
+            let createEnimies = gameOption.createSpriteFactory(this, 'enimy1', 2);
+            gameOption.enimy = createEnimies.createSprite(200, this.bottomY - 160, 'enimy1');
+            gameOption.enimy.play('idle')
             this.physics.add.collider(gameOption.enimy, groundLayer);
             this.physics.add.collider(gameOption.player, gameOption.enimy);
 
