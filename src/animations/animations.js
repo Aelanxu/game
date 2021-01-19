@@ -80,7 +80,7 @@ const animations = {
                 key: 'attack',
                 frames: scene.anims.generateFrameNames(name, { prefix: 'Attack__', start: 0, end: 9, suffix: '.png', zeroPad: 3 }),
                 frameRate: 30,
-                repeat: -1,
+                repeat: 0,
                 duration: 2000,
             },
             throw: {

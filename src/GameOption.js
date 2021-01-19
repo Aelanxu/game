@@ -1,20 +1,45 @@
 import { Player } from './player/player';
-import { Add } from './enimy/enimies';
+import { Add } from './public/createGameObject';
 export let gameOption = {
     score: 0,
     gameOver: false,
     ground: null,
-    platforms: null,
     player: null,
-    cursors: null,
-    stars: null,
     scoreText: null,
     animy: null,
     width: 1600,
     height: 360,
     camerasWidth: 640,
     camerasHeight: 360,
+    player_item: {
+        health: 100,
+        skill: {
+            sword: {
+                distance: 10,
+                damage: 10,
+                critical: 0.3,
+            }
+        }
 
+
+    },
+    animy_item: {
+        health: 100,
+        skill: {
+            kick: {
+                name: 'kick',
+                distance: [30, 50],
+                damage: 10,
+                critical: 0.3,
+            },
+            punch: {
+                distance: [0, 30],
+                damage: 5,
+                critical: 0.4,
+            }
+        }
+
+    },
     //载入游戏进度
     loadProgress() {
         let width = this.cameras.main.width;

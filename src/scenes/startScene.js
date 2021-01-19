@@ -100,12 +100,12 @@ export class startScene extends Phaser.Scene {
         if (gameOption.gameOver) return;
 
 
-    
+
         this.input.keyboard.on('keydown', function(event) {
             if (gameOption.gameOver) return;
             console.log(event.key)
-          
-            switch (event.key){
+
+            switch (event.key) {
                 case "ArrowLeft":
                     if (!gameOption.player.flipX) {
                         gameOption.player.flipX = true;
@@ -113,7 +113,7 @@ export class startScene extends Phaser.Scene {
                     gameOption.player.setVelocityX(-160);
                     gameOption.player.anims.play('run', true);
                     break;
-                    case "ArrowRight":
+                case "ArrowRight":
                     if (gameOption.player.flipX) {
                         gameOption.player.flipX = false;
                     }
@@ -127,21 +127,26 @@ export class startScene extends Phaser.Scene {
                     }
                     break;
                 case "a":
-                    
+
+
                     gameOption.player.anims.play('attack', true);
+                    gameOption.player.anims.playAfterRepeat('idle')
+
                     break;
 
 
-           }
-    
+            }
+
 
 
         });
 
         this.input.keyboard.on('keyup', function(event) {
+            if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+                gameOption.player.setVelocityX(0);
+                gameOption.player.anims.play('idle', true);
+            }
 
-            gameOption.player.setVelocityX(0);
-            gameOption.player.anims.play('idle', true);
 
 
 
@@ -202,8 +207,26 @@ export class startScene extends Phaser.Scene {
     //     });
 
     // }
+    //判断是否被击中
+
+
+    battle(distance, item, enimy, dt) {
+
+        //按照距离判断使用什么技能
+        Object.getOwnPropertyNames(item.skill).forEach((key) => {
+
+            if (Math.round(distance) > item.skill[key].distance[0] && Math.round(distance) < item.skill[key].distance[1]) {
+
+                enimy.setVelocityX(0);
+                enimy.anims.play(key, true);
+
+
+
+            }
+        })
+    }
     create() {
-        this.createKeyContral();
+            this.createKeyContral();
 
             // bg.setScale(1.5);
             this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
@@ -222,7 +245,7 @@ export class startScene extends Phaser.Scene {
             //  设置碰撞
 
             this.map.setCollision([1, 33])
-             this.physics.add.collider(gameOption.player, gameOption.ground);
+            this.physics.add.collider(gameOption.player, gameOption.ground);
 
 
             // 创建敌人
@@ -230,9 +253,9 @@ export class startScene extends Phaser.Scene {
             gameOption.enimy = createEnimies.createSprite(200, this.bottomY - 160, 'enimy1');
             gameOption.enimy.play('idle')
             console.log(gameOption.enimy);
-        this.physics.add.collider(gameOption.enimy, gameOption.ground);
-            this.physics.add.collider(gameOption.player, gameOption.enimy);
-      
+            this.physics.add.collider(gameOption.enimy, gameOption.ground);
+            //this.physics.add.collider(gameOption.player, gameOption.enimy);
+
             this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
             this.cameras.main.setBounds(0, 0, gameOption.width, this.bottomY);
 
@@ -246,7 +269,7 @@ export class startScene extends Phaser.Scene {
 
             //  this.createPlatforms();
             //  this.createButton();
-           
+
 
 
             //this.physics.add.collider(gameOption.enimy, groundLayer);
@@ -290,7 +313,7 @@ export class startScene extends Phaser.Scene {
 
     update(time, delta) {
 
-        
+
         let player_x = gameOption.player.x;
         let enimy_x = gameOption.enimy.x;
         let distend = player_x - enimy_x;
@@ -300,22 +323,7 @@ export class startScene extends Phaser.Scene {
 
         if (Math.abs(distend) <= 40) {
 
-            gameOption.enimy.setVelocityX(0);
-            let rand = Math.abs(distend);
-            //console.log(rand)
-            let n = 0;
-            switch (true) {
-                case rand > 30:
-                    n = 0
-                    break;
-                case rand > 20:
-                    n = 2
-                    break;
-                case rand > 10:
-                    n = 1
-                    break;
-            }
-            gameOption.enimy.anims.play(skill[n], true);
+            this.battle(Math.abs(distend), gameOption.animy_item, gameOption.enimy, delta)
 
         } else if (distend < 0) {
             gameOption.enimy.flipX = false;
