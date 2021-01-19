@@ -100,39 +100,40 @@ export class startScene extends Phaser.Scene {
         if (gameOption.gameOver) return;
 
 
-        this.input.keyboard.on('keydown_UP', function(event) {
-
-
-
-        });
+    
         this.input.keyboard.on('keydown', function(event) {
             if (gameOption.gameOver) return;
-            if (event.key === "ArrowLeft") {
-                if (!gameOption.player.flipX) {
-                    gameOption.player.flipX = true;
-                }
-                gameOption.player.setVelocityX(-160);
-                gameOption.player.anims.play('run', true);
+            console.log(event.key)
+          
+            switch (event.key){
+                case "ArrowLeft":
+                    if (!gameOption.player.flipX) {
+                        gameOption.player.flipX = true;
+                    }
+                    gameOption.player.setVelocityX(-160);
+                    gameOption.player.anims.play('run', true);
+                    break;
+                    case "ArrowRight":
+                    if (gameOption.player.flipX) {
+                        gameOption.player.flipX = false;
+                    }
+                    gameOption.player.setVelocityX(160);
+                    gameOption.player.anims.play('run', true);
+                    break;
+                case "ArrowUp":
+                    if (gameOption.player.body.blocked.down) {
+                        gameOption.player.setVelocityY(-330);
 
-                // gameOption.player.flipX 
-                console.log(gameOption.player.flipX)
-            } else if (event.key === "ArrowRight") {
-                if (gameOption.gameOver) return;
-                if (gameOption.player.flipX) {
-                    gameOption.player.flipX = false;
-                }
-                gameOption.player.setVelocityX(160);
-                gameOption.player.anims.play('run', true);
+                    }
+                    break;
+                case "a":
+                    
+                    gameOption.player.anims.play('attack', true);
+                    break;
 
-            } else if (event.key === "ArrowUp") {
-                //gameOption.player.body.touching.down
 
-                if (gameOption.player.body.blocked.down) {
-                    gameOption.player.setVelocityY(-330);
-
-                }
-
-            }
+           }
+    
 
 
         });
@@ -202,14 +203,14 @@ export class startScene extends Phaser.Scene {
 
     // }
     create() {
-
+        this.createKeyContral();
 
             // bg.setScale(1.5);
             this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
 
             let tileset = this.map.addTilesetImage('tiles')
             let bg = this.map.createLayer('bg', tileset, 0, 0);
-            let groundLayer = this.map.createLayer('ground', tileset, 0, 0)
+            gameOption.ground = this.map.createLayer('ground', tileset, 0, 0)
                 // 初始化主角
 
             let createPlayer = gameOption.createSpriteFactory(this, 'renzhe', 1);
@@ -221,7 +222,7 @@ export class startScene extends Phaser.Scene {
             //  设置碰撞
 
             this.map.setCollision([1, 33])
-            this.physics.add.collider(gameOption.player, groundLayer);
+             this.physics.add.collider(gameOption.player, gameOption.ground);
 
 
             // 创建敌人
@@ -229,9 +230,9 @@ export class startScene extends Phaser.Scene {
             gameOption.enimy = createEnimies.createSprite(200, this.bottomY - 160, 'enimy1');
             gameOption.enimy.play('idle')
             console.log(gameOption.enimy);
-            this.physics.add.collider(gameOption.enimy, groundLayer);
+        this.physics.add.collider(gameOption.enimy, gameOption.ground);
             this.physics.add.collider(gameOption.player, gameOption.enimy);
-
+      
             this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
             this.cameras.main.setBounds(0, 0, gameOption.width, this.bottomY);
 
@@ -245,7 +246,7 @@ export class startScene extends Phaser.Scene {
 
             //  this.createPlatforms();
             //  this.createButton();
-            this.createKeyContral();
+           
 
 
             //this.physics.add.collider(gameOption.enimy, groundLayer);
@@ -289,7 +290,7 @@ export class startScene extends Phaser.Scene {
 
     update(time, delta) {
 
-
+        
         let player_x = gameOption.player.x;
         let enimy_x = gameOption.enimy.x;
         let distend = player_x - enimy_x;

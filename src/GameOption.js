@@ -58,7 +58,7 @@ export let gameOption = {
     //创建敌人
 }
 
-// 创建游戏角色
+// 创建游戏角色工厂
 gameOption.createSpriteFactory = function(scene, name, type) {
     return new Add(scene, name, type);
 }

@@ -76,6 +76,19 @@ const animations = {
                 frameRate: 30,
                 repeat: -1
             },
+            attack: {
+                key: 'attack',
+                frames: scene.anims.generateFrameNames(name, { prefix: 'Attack__', start: 0, end: 9, suffix: '.png', zeroPad: 3 }),
+                frameRate: 30,
+                repeat: -1,
+                duration: 2000,
+            },
+            throw: {
+                key: 'throw',
+                frames: scene.anims.generateFrameNames(name, { prefix: 'Throw__', start: 0, end: 9, suffix: '.png', zeroPad: 3 }),
+                frameRate: 30,
+                repeat: -1
+            },
         }
 
 
