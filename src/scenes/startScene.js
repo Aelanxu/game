@@ -121,7 +121,7 @@ export class startScene extends Phaser.Scene {
                     gameOption.player.matterSprite.anims.play('run', true);
                     break;
                 case "ArrowUp":
-                    if (gameOption.player.matterSprite.body.blocked.down) {
+                    if (gameOption.player.matterSprite.body.blocked.bottom) {
                         gameOption.player.matterSprite.setVelocityY(-330);
 
                     }
