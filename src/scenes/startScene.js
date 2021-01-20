@@ -227,34 +227,39 @@ export class startScene extends Phaser.Scene {
     }
     create() {
             this.createKeyContral();
-
+        this.matter.world.setBounds(0, 0, gameOption.width, gameOption.height);
             // bg.setScale(1.5);
             this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
 
             let tileset = this.map.addTilesetImage('tiles')
             let bg = this.map.createLayer('bg', tileset, 0, 0);
-            gameOption.ground = this.map.createLayer('ground', tileset, 0, 0)
+            gameOption.ground = this.map.createLayer('ground', tileset, 0, 0);
+        gameOption.ground.setCollisionByProperty({ collides: true });
+        this.matter.world.convertTilemapLayer(gameOption.ground);
                 // 初始化主角
 
             let createPlayer = gameOption.createSpriteFactory(this, 'renzhe', 1);
             gameOption.player = createPlayer.createSprite(300, this.bottomY - 360, 'renzhe');
-
+            //gameOption.player.setPushable(false)
             gameOption.player.play('idle')
-            console.log(gameOption.player.displayOriginY);
+            let box = this.add.rectangle(400, 300, 64, 64, 0xffffff);
+            // this.physics.add.existing(box)
+     
             console.log(gameOption.player.displayOriginX);
             //  设置碰撞
 
             this.map.setCollision([1, 33])
-            this.physics.add.collider(gameOption.player, gameOption.ground);
+           // this.physics.add.collider(gameOption.player, gameOption.ground);
 
 
             // 创建敌人
             let createEnimies = gameOption.createSpriteFactory(this, 'enimy1', 2);
             gameOption.enimy = createEnimies.createSprite(200, this.bottomY - 160, 'enimy1');
+      
             gameOption.enimy.play('idle')
             console.log(gameOption.enimy);
-            this.physics.add.collider(gameOption.enimy, gameOption.ground);
-            //this.physics.add.collider(gameOption.player, gameOption.enimy);
+           // this.physics.add.collider(gameOption.enimy, gameOption.ground);
+           // this.physics.add.collider(gameOption.player, gameOption.enimy);
 
             this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
             this.cameras.main.setBounds(0, 0, gameOption.width, this.bottomY);
