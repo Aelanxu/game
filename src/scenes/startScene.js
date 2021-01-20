@@ -107,30 +107,30 @@ export class startScene extends Phaser.Scene {
 
             switch (event.key) {
                 case "ArrowLeft":
-                    if (!gameOption.player.flipX) {
-                        gameOption.player.flipX = true;
+                    if (!gameOption.player.matterSprite.flipX) {
+                        gameOption.player.matterSprite.flipX = true;
                     }
-                    gameOption.player.setVelocityX(-160);
-                    gameOption.player.anims.play('run', true);
+                    gameOption.player.matterSprite.setVelocityX(-16);
+                    gameOption.player.matterSprite.anims.play('run', true);
                     break;
                 case "ArrowRight":
-                    if (gameOption.player.flipX) {
-                        gameOption.player.flipX = false;
+                    if (gameOption.player.matterSprite.flipX) {
+                        gameOption.player.matterSprite.flipX = false;
                     }
-                    gameOption.player.setVelocityX(160);
-                    gameOption.player.anims.play('run', true);
+                    gameOption.player.matterSprite.setVelocityX(16);
+                    gameOption.player.matterSprite.anims.play('run', true);
                     break;
                 case "ArrowUp":
-                    if (gameOption.player.body.blocked.down) {
-                        gameOption.player.setVelocityY(-330);
+                    if (gameOption.player.matterSprite.body.blocked.down) {
+                        gameOption.player.matterSprite.setVelocityY(-330);
 
                     }
                     break;
                 case "a":
 
 
-                    gameOption.player.anims.play('attack', true);
-                    gameOption.player.anims.playAfterRepeat('idle')
+                    gameOption.player.matterSprite.anims.play('attack', true);
+                    gameOption.player.matterSprite.anims.playAfterRepeat('idle')
 
                     break;
 
@@ -143,8 +143,8 @@ export class startScene extends Phaser.Scene {
 
         this.input.keyboard.on('keyup', function(event) {
             if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-                gameOption.player.setVelocityX(0);
-                gameOption.player.anims.play('idle', true);
+                gameOption.player.matterSprite.setVelocityX(0);
+                gameOption.player.matterSprite.anims.play('idle', true);
             }
 
 
@@ -207,7 +207,7 @@ export class startScene extends Phaser.Scene {
     //     });
 
     // }
-    //判断是否被击中
+
 
 
     battle(distance, item, enimy, dt) {
@@ -227,40 +227,63 @@ export class startScene extends Phaser.Scene {
     }
     create() {
             this.createKeyContral();
-
-            // bg.setScale(1.5);
+            this.matter.world.setBounds(0, 0, gameOption.width, gameOption.height)
+                // 地图
             this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
 
             let tileset = this.map.addTilesetImage('tiles')
             let bg = this.map.createLayer('bg', tileset, 0, 0);
             gameOption.ground = this.map.createLayer('ground', tileset, 0, 0)
-                // 初始化主角
+            gameOption.ground.setCollisionByProperty({ collides: true });
+            this.matter.world.convertTilemapLayer(gameOption.ground);
+            // 初始化主角
 
             let createPlayer = gameOption.createSpriteFactory(this, 'renzhe', 1);
-            gameOption.player = createPlayer.createSprite(300, this.bottomY - 360, 'renzhe');
+            gameOption.player.matterSprite = createPlayer.createSprite(300, this.bottomY - 360, 'renzhe');
+            let M = Phaser.Physics.Matter.Matter;
+            let w = gameOption.player.matterSprite.width;
+            let h = gameOption.player.matterSprite.height;
+            let sx = w / 2;
+            let sy = h / 2;
 
-            gameOption.player.play('idle')
-            console.log(gameOption.player.displayOriginY);
-            console.log(gameOption.player.displayOriginX);
+
+            let playBody = M.Bodies.rectangle(sx, sy, w * 0.75, h, { chamfer: { radius: 10 } });
+            gameOption.player.sensors.bottom = M.Bodies.rectangle(sx, h, sx, 5, { isSensor: true });
+            gameOption.player.sensors.left = M.Bodies.rectangle(sx - w * 0.45, sy, 5, h * 0.25, { isSensor: true });
+            gameOption.player.sensors.right = M.Bodies.rectangle(sx + w * 0.45, sy, 5, h * 0.25, { isSensor: true });
+            let compoundBody = M.Body.create({
+                parts: [
+                    playBody, gameOption.player.sensors.bottom, gameOption.player.sensors.left,
+                    gameOption.player.sensors.right
+                ],
+                restitution: 0.05 //与边界保持距离
+            })
+            gameOption.player.matterSprite
+                .setExistingBody(compoundBody)
+                .setFixedRotation() // Sets max inertia to prevent rotation
+                .setPosition(200, 200);
+
+            gameOption.player.matterSprite.play('idle')
+
             //  设置碰撞
 
-            this.map.setCollision([1, 33])
-            this.physics.add.collider(gameOption.player, gameOption.ground);
+            // this.map.setCollision([1, 33])
+
 
 
             // 创建敌人
-            let createEnimies = gameOption.createSpriteFactory(this, 'enimy1', 2);
-            gameOption.enimy = createEnimies.createSprite(200, this.bottomY - 160, 'enimy1');
-            gameOption.enimy.play('idle')
-            console.log(gameOption.enimy);
-            this.physics.add.collider(gameOption.enimy, gameOption.ground);
+            /*  let createEnimies = gameOption.createSpriteFactory(this, 'enimy1', 2);
+             gameOption.enimy = createEnimies.createSprite(200, this.bottomY - 160, 'enimy1');
+             gameOption.enimy.play('idle')
+             console.log(gameOption.enimy);
+             this.physics.add.collider(gameOption.enimy, gameOption.ground); */
             //this.physics.add.collider(gameOption.player, gameOption.enimy);
 
             this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
             this.cameras.main.setBounds(0, 0, gameOption.width, this.bottomY);
 
 
-            this.cameras.main.startFollow(gameOption.player);
+            this.cameras.main.startFollow(gameOption.player.matterSprite);
             // gameOption.platforms = this.physics.add.staticGroup();
 
 
@@ -314,7 +337,7 @@ export class startScene extends Phaser.Scene {
     update(time, delta) {
 
 
-        let player_x = gameOption.player.x;
+        /*  let player_x = gameOption.player.x;
         let enimy_x = gameOption.enimy.x;
         let distend = player_x - enimy_x;
         // let keys = ['walk', 'idle', 'kick', 'punch', 'jump', 'jumpkick', 'win', 'die'] 
@@ -335,7 +358,7 @@ export class startScene extends Phaser.Scene {
             gameOption.enimy.play('walk', true)
             gameOption.enimy.flipX = true;
         }
-
+ */
 
     }
 }

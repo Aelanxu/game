@@ -7,9 +7,9 @@ export class Add {
     };
     createSprite(x = 0, y = 0) {
         let sprite = null;
-        sprite = this.scene.physics.add.sprite(x, y, this.name)
-        sprite.setBounce(0.3)
-        sprite.setCollideWorldBounds(true);
+        sprite = this.scene.matter.add.sprite(x, y, this.name)
+            // sprite.setBounce(0.3)
+            // sprite.setCollideWorldBounds(true);
         this.createAnims(this.scene, this.name);
         return sprite;
 

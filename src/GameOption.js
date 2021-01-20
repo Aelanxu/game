@@ -1,5 +1,6 @@
-import { Player } from './player/player';
+import { Player } from './gameActer/player';
 import { Add } from './public/createGameObject';
+import { playConfig, SmoothedHorionztalControl } from './gameActer/player'
 export let gameOption = {
     score: 0,
     gameOver: false,
@@ -11,18 +12,8 @@ export let gameOption = {
     height: 360,
     camerasWidth: 640,
     camerasHeight: 360,
-    player_item: {
-        health: 100,
-        skill: {
-            sword: {
-                distance: 10,
-                damage: 10,
-                critical: 0.3,
-            }
-        }
-
-
-    },
+    player: playConfig,
+    controlMove: SmoothedHorionztalControl,
     animy_item: {
         health: 100,
         skill: {
