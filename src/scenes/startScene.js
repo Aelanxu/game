@@ -226,7 +226,7 @@ export class startScene extends Phaser.Scene {
         })
     }
     create() {
-            this.createKeyContral();
+            // this.createKeyContral();
             this.matter.world.setBounds(0, 0, gameOption.width, gameOption.height)
                 // 地图
             this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
@@ -236,17 +236,16 @@ export class startScene extends Phaser.Scene {
             gameOption.ground = this.map.createLayer('ground', tileset, 0, 0)
             gameOption.ground.setCollisionByProperty({ collides: true });
             this.matter.world.convertTilemapLayer(gameOption.ground);
-            // 初始化主角
+            // 初始化player
 
             let createPlayer = gameOption.createSpriteFactory(this, 'renzhe', 1);
             gameOption.player.matterSprite = createPlayer.createSprite(300, this.bottomY - 360, 'renzhe');
+            // 碰撞绑定
             let M = Phaser.Physics.Matter.Matter;
             let w = gameOption.player.matterSprite.width;
             let h = gameOption.player.matterSprite.height;
             let sx = w / 2;
             let sy = h / 2;
-
-
             let playBody = M.Bodies.rectangle(sx, sy, w * 0.75, h, { chamfer: { radius: 10 } });
             gameOption.player.sensors.bottom = M.Bodies.rectangle(sx, h, sx, 5, { isSensor: true });
             gameOption.player.sensors.left = M.Bodies.rectangle(sx - w * 0.45, sy, 5, h * 0.25, { isSensor: true });
@@ -261,13 +260,55 @@ export class startScene extends Phaser.Scene {
             gameOption.player.matterSprite
                 .setExistingBody(compoundBody)
                 .setFixedRotation() // Sets max inertia to prevent rotation
-                .setPosition(200, 200);
+                .setPosition(200, 200)
+                .play('idle');
 
-            gameOption.player.matterSprite.play('idle')
+            // 监测碰撞
 
-            //  设置碰撞
+            // this.matter.world.on('collisionstart', function(event) {
+            //     for (let i = 0; i < event.pairs.length; i++) {
+            //         let bodyA = event.pairs[i].bodyA;
+            //         let bodyB = event.pairs[i].bodyB;
+            //         console.log(bodyA, bodyB)
+            //     }
+            // })
+            this.matter.world.on('beforeupdate', function(event) {
+                gameOption.player.numTouching.left = 0;
+                gameOption.player.numTouching.right = 0;
+                gameOption.player.numTouching.bottom = 0;
+            });
+            this.matter.world.on('collisionactive', function(event) {
+                var playerBody = gameOption.player.body;
+                var left = gameOption.player.sensors.left;
+                var right = gameOption.player.sensors.right;
+                var bottom = gameOption.player.sensors.bottom;
+                for (var i = 0; i < event.pairs.length; i++) {
+                    var bodyA = event.pairs[i].bodyA;
+                    var bodyB = event.pairs[i].bodyB;
 
-            // this.map.setCollision([1, 33])
+                    if (bodyA === playerBody || bodyB === playerBody) {
+                        continue;
+                    } else if (bodyA === bottom || bodyB === bottom) {
+                        // Standing on any surface counts (e.g. jumping off of a non-static crate).
+                        gameOption.player.numTouching.bottom += 1;
+                    } else if ((bodyA === left && bodyB.isStatic) || (bodyB === left && bodyA.isStatic)) {
+                        // Only static objects count since we don't want to be blocked by an object that we
+                        // can push around.
+                        gameOption.player.numTouching.left += 1;
+                    } else if ((bodyA === right && bodyB.isStatic) || (bodyB === right && bodyA.isStatic)) {
+                        gameOption.player.numTouching.right += 1;
+                    }
+                }
+            });
+            // Update over, so now we can determine if any direction is blocked
+            this.matter.world.on('afterupdate', function(event) {
+                gameOption.player.blocked.right = gameOption.player.numTouching.right > 0 ? true : false;
+                gameOption.player.blocked.left = gameOption.player.numTouching.left > 0 ? true : false;
+                gameOption.player.blocked.bottom = gameOption.player.numTouching.bottom > 0 ? true : false;
+            });
+
+
+            gameOption.cursors = this.input.keyboard.createCursorKeys();
 
 
 
@@ -278,7 +319,7 @@ export class startScene extends Phaser.Scene {
              console.log(gameOption.enimy);
              this.physics.add.collider(gameOption.enimy, gameOption.ground); */
             //this.physics.add.collider(gameOption.player, gameOption.enimy);
-
+            //相机设置
             this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
             this.cameras.main.setBounds(0, 0, gameOption.width, this.bottomY);
 
@@ -335,6 +376,49 @@ export class startScene extends Phaser.Scene {
         //
 
     update(time, delta) {
+
+        let oldVelocityX;
+        let targetVelocityX;
+        let newVelocityX;
+
+        if (gameOption.cursors.left.isDown && !gameOption.player.blocked.left) {
+            gameOption.smoothedControls.moveLeft(delta);
+            gameOption.player.matterSprite.anims.play('run', true);
+            if (!gameOption.player.matterSprite.flipX) {
+                gameOption.player.matterSprite.flipX = true;
+            }
+
+            // Lerp the velocity towards the max run using the smoothed controls. This simulates a
+            // player controlled acceleration.
+            oldVelocityX = gameOption.player.matterSprite.body.velocity.x;
+            targetVelocityX = -gameOption.player.speed.run;
+            newVelocityX = Phaser.Math.Linear(oldVelocityX, targetVelocityX, -gameOption.smoothedControls.value);
+
+            gameOption.player.matterSprite.setVelocityX(newVelocityX);
+        } else if (gameOption.cursors.right.isDown && !gameOption.player.blocked.right) {
+            gameOption.smoothedControls.moveRight(delta);
+            gameOption.player.matterSprite.anims.play('run', true);
+            if (gameOption.player.matterSprite.flipX) {
+                gameOption.player.matterSprite.flipX = false;
+            }
+
+            // Lerp the velocity towards the max run using the smoothed controls. This simulates a
+            // player controlled acceleration.
+            oldVelocityX = gameOption.player.matterSprite.body.velocity.x;
+            targetVelocityX = gameOption.player.speed.run;
+            newVelocityX = Phaser.Math.Linear(oldVelocityX, targetVelocityX, gameOption.smoothedControls.value);
+
+            gameOption.player.matterSprite.setVelocityX(newVelocityX);
+        } else {
+            gameOption.smoothedControls.reset();
+            gameOption.player.matterSprite.anims.play('idle', true);
+        }
+
+
+        if (gameOption.cursors.up.isDown && gameOption.player.blocked.bottom) {
+            gameOption.player.matterSprite.setVelocityY(-gameOption.player.speed.jump);
+
+        }
 
 
         /*  let player_x = gameOption.player.x;

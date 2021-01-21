@@ -1,5 +1,5 @@
 import { Player } from './gameActer/player';
-import { Add } from './public/createGameObject';
+import { createSprite } from './public/createSprite';
 import { playConfig, SmoothedHorionztalControl } from './gameActer/player'
 export let gameOption = {
     score: 0,
@@ -13,7 +13,8 @@ export let gameOption = {
     camerasWidth: 640,
     camerasHeight: 360,
     player: playConfig,
-    controlMove: SmoothedHorionztalControl,
+    cursors: null,
+    smoothedControls: new SmoothedHorionztalControl(0.001),
     animy_item: {
         health: 100,
         skill: {
@@ -76,5 +77,5 @@ export let gameOption = {
 
 // 创建游戏角色工厂
 gameOption.createSpriteFactory = function(scene, name, type) {
-    return new Add(scene, name, type);
+    return new createSprite(scene, name, type);
 }

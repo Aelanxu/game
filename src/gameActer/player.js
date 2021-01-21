@@ -2,10 +2,26 @@
 const playConfig = {
     matterSprite: null,
     health: 100,
+    blocked: {
+        left: false,
+        right: false,
+        bottom: false
+    },
     sensors: {
         bottom: null,
         left: null,
         right: null
+    },
+    numTouching: {
+        left: 0,
+        right: 0,
+        bottom: 0
+    },
+
+
+    speed: {
+        run: 5,
+        jump: 12
     },
     skill: {
         sword: {
@@ -31,7 +47,7 @@ let SmoothedHorionztalControl = new Phaser.Class({
         if (this.value > 0) { this.reset(); }
         this.value -= this.msSpeed * delta;
         if (this.value < -1) { this.value = -1; }
-        playerController.time.rightDown += delta;
+
     },
 
     moveRight: function(delta) {
