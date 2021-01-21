@@ -1,5 +1,5 @@
 import { animations } from '../animations/animations'
-export class Add {
+export class createSprite {
     constructor(scene, keyName, type) {
         this.scene = scene;
         this.name = keyName;
