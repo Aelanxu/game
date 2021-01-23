@@ -19,7 +19,9 @@ export class loadScene extends Phaser.Scene {
         this.load.image('tiles', 'tileds/tiles.png');
         this.load.tilemapTiledJSON('map', 'tileds/map.json');
         this.load.atlas('renzhe', 'player/renzhe.png', 'player/renzhe.json');
-        this.load.spritesheet('enimy1', 'enimies/enimy1.png', { frameWidth: 48, frameHeight: 48 });
+        this.load.atlas('enemy', 'enimies/enemy.png', 'enimies/enemy.json');
+        //this.load.spritesheet('enemy', 'enimies/enemy.png', { frameWidth: 100, frameHeight: 180 });
+
 
 
         gameOption.loadProgress.call(this);

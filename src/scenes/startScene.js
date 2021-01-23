@@ -1,5 +1,6 @@
 import { gameOption } from '../gameOption'
 
+
 export class startScene extends Phaser.Scene {
     constructor() {
         super("startScene");
@@ -28,134 +29,30 @@ export class startScene extends Phaser.Scene {
         }
         //分数计算
     calculate(n) {
-            gameOption.score += n;
-            gameOption.scoreText.setText('Score: ' + gameOption.score);
-        }
-        //监测炸弹爆炸
-        // hitBomb(player, bomb) {
-
-    //         this.physics.pause();
-
-    //         player.setTint(0xff0000);
-
-    //         player.anims.play('turn');
-    //         this.gameOver();
-
-
-    //     }
-    // 游戏结束
-    gameOver() {
-            gameOption.gameOver = true;
-            gameOption.score = 0;
-            let gameOverTitle = this.add.image(gameOption.width / 2, gameOption.height / 2, 'gameover');
-            let startButton = this.add.image(gameOption.width / 2, gameOption.height - 200, 'start').setInteractive();
-            startButton.on('pointerdown', (pointer) => {
-                gameOption.gameOver = false;
-                gameOverTitle.destroy();
-                startButton.destroy();
-                gameOption.platforms.clear(true);
-                gameOption.player.destroy();
-                gameOption.cursors = null;
-                gameOption.stars.destroy();
-                gameOption.scoreText.destroy();
-                gameOption.bombs.destroy();
-                this.scene.start('startScene')
-            })
-        }
-        //炸弹部署
-        // setBombs(player) {
-        //         let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-    //         let bomb = gameOption.bombs.create(x, 16, 'bomb');
-    //         bomb.setBounce(1);
-    //         bomb.setCollideWorldBounds(true);
-    //         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-    //     }
-    //创建地板
-    // createPlatforms() {
-    //         //地面的固定位置
-    //         let rx = Phaser.Math.Between(0, 2) * 20;
-    //         let rd = Phaser.Math.Between(1, 2) * 30;
-    //         let ld = Phaser.Math.Between(1, 3) * 40;
-    //         let md = Phaser.Math.Between(0, 2) * 20;
-    //         let pY = this.bottomY - 150;
-
-
-    //         console.log('y' + rx)
-
-    //         gameOption.platforms.create(50 - rx, pY - ld, 'platform');
-    //         gameOption.platforms.create(gameOption.width / 2, pY - md, 'platform');
-    //         gameOption.platforms.create(gameOption.width - 50 + rx, pY - rd, 'platform');
-    //         gameOption.platforms.children.iterate(function(child) {
-    //             child.body.allowGravity = false;
-    //         })
-    //         if (gameOption.platforms.children.size < 6) {
-    //             this.createPlatforms()
-
-    //         }
-    //         console.log(gameOption.platforms.children.size)
-    //     }
-    // keybroad for contral
-    createKeyContral() {
-        if (gameOption.gameOver) return;
-
-
-
-        this.input.keyboard.on('keydown', function(event) {
-            if (gameOption.gameOver) return;
-            console.log(event.key)
-
-            switch (event.key) {
-                case "ArrowLeft":
-                    if (!gameOption.player.matterSprite.flipX) {
-                        gameOption.player.matterSprite.flipX = true;
-                    }
-                    gameOption.player.matterSprite.setVelocityX(-16);
-                    gameOption.player.matterSprite.anims.play('run', true);
-                    break;
-                case "ArrowRight":
-                    if (gameOption.player.matterSprite.flipX) {
-                        gameOption.player.matterSprite.flipX = false;
-                    }
-                    gameOption.player.matterSprite.setVelocityX(16);
-                    gameOption.player.matterSprite.anims.play('run', true);
-                    break;
-                case "ArrowUp":
-                    if (gameOption.player.matterSprite.body.blocked.bottom) {
-                        gameOption.player.matterSprite.setVelocityY(-330);
-
-                    }
-                    break;
-                case "a":
-
-
-                    gameOption.player.matterSprite.anims.play('attack', true);
-                    gameOption.player.matterSprite.anims.playAfterRepeat('idle')
-
-                    break;
-
-
-            }
-
-
-
-        });
-
-        this.input.keyboard.on('keyup', function(event) {
-            if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-                gameOption.player.matterSprite.setVelocityX(0);
-                gameOption.player.matterSprite.anims.play('idle', true);
-            }
-
-
-
-
-        });
-
-
-
-
+        gameOption.score += n;
+        gameOption.scoreText.setText('Score: ' + gameOption.score);
     }
+
+    gameOver() {
+        gameOption.gameOver = true;
+        gameOption.score = 0;
+        let gameOverTitle = this.add.image(gameOption.width / 2, gameOption.height / 2, 'gameover');
+        let startButton = this.add.image(gameOption.width / 2, gameOption.height - 200, 'start').setInteractive();
+        startButton.on('pointerdown', (pointer) => {
+            gameOption.gameOver = false;
+            gameOverTitle.destroy();
+            startButton.destroy();
+            gameOption.platforms.clear(true);
+            gameOption.player.destroy();
+            gameOption.cursors = null;
+            gameOption.stars.destroy();
+            gameOption.scoreText.destroy();
+            gameOption.bombs.destroy();
+            this.scene.start('startScene')
+        })
+    }
+
+
 
 
     // 创建操作按钮
@@ -225,8 +122,16 @@ export class startScene extends Phaser.Scene {
             }
         })
     }
+
+
+
+
+
+
+
     create() {
-            // this.createKeyContral();
+
+
             this.matter.world.setBounds(0, 0, gameOption.width, gameOption.height)
                 // 地图
             this.map = this.make.tilemap({ key: 'map', tileWidth: 32, tileHeight: 32 });
@@ -238,40 +143,74 @@ export class startScene extends Phaser.Scene {
             this.matter.world.convertTilemapLayer(gameOption.ground);
             // 初始化player
 
-            let createPlayer = gameOption.createSpriteFactory(this, 'renzhe', 1);
-            gameOption.player.matterSprite = createPlayer.createSprite(300, this.bottomY - 360, 'renzhe');
-            // 碰撞绑定
-            let M = Phaser.Physics.Matter.Matter;
-            let w = gameOption.player.matterSprite.width;
-            let h = gameOption.player.matterSprite.height;
-            let sx = w / 2;
-            let sy = h / 2;
-            let playBody = M.Bodies.rectangle(sx, sy, w * 0.75, h, { chamfer: { radius: 10 } });
-            gameOption.player.sensors.bottom = M.Bodies.rectangle(sx, h, sx, 5, { isSensor: true });
-            gameOption.player.sensors.left = M.Bodies.rectangle(sx - w * 0.45, sy, 5, h * 0.25, { isSensor: true });
-            gameOption.player.sensors.right = M.Bodies.rectangle(sx + w * 0.45, sy, 5, h * 0.25, { isSensor: true });
-            let compoundBody = M.Body.create({
-                parts: [
-                    playBody, gameOption.player.sensors.bottom, gameOption.player.sensors.left,
-                    gameOption.player.sensors.right
-                ],
-                restitution: 0.05 //与边界保持距离
-            })
-            gameOption.player.matterSprite
-                .setExistingBody(compoundBody)
-                .setFixedRotation() // Sets max inertia to prevent rotation
-                .setPosition(200, 200)
-                .play('idle');
+
+            gameOption.player.matterSprite = this.matter.add.sprite(100, this.bottomY - 360, 'renzhe');
+            gameOption.player.createBody(this);
+
+
+            // Update over, so now we can determine if any direction is blocked
+            this.matter.world.on('afterupdate', function(event) {
+                gameOption.player.blocked.right = gameOption.player.numTouching.right > 0 ? true : false;
+                gameOption.player.blocked.left = gameOption.player.numTouching.left > 0 ? true : false;
+                gameOption.player.blocked.bottom = gameOption.player.numTouching.bottom > 0 ? true : false;
+            });
+
+
+            gameOption.cursors = this.input.keyboard.createCursorKeys();
+
+
+
+
+
+
+
+            //创建敌人
+            gameOption.enemy.matterSprite = this.matter.add.sprite(280, this.bottomY - 160, 'enemy');
+            gameOption.enemy.createBody(this);
+
+
+
+            //相机设置
+            this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
+            this.cameras.main.setBounds(0, 0, gameOption.width, this.bottomY);
+            this.cameras.main.startFollow(gameOption.player.matterSprite);
 
             // 监测碰撞
 
-            // this.matter.world.on('collisionstart', function(event) {
-            //     for (let i = 0; i < event.pairs.length; i++) {
-            //         let bodyA = event.pairs[i].bodyA;
-            //         let bodyB = event.pairs[i].bodyB;
-            //         console.log(bodyA, bodyB)
-            //     }
-            // })
+
+            this.matter.world.on('collisionstart', function(event) {
+                for (let i = 0; i < event.pairs.length; i++) {
+                    let bodyA = event.pairs[i].bodyA;
+                    let bodyB = event.pairs[i].bodyB;
+                    if ((bodyA === gameOption.player.body && bodyB === gameOption.enemy.sensors.left) || (bodyA === gameOption.enemy.sensors.left && bodyB === gameOption.player.body)) {
+                        console.log('----！')
+
+                    } else if ((bodyA === gameOption.player.body && bodyB === gameOption.enemy.sensors.right) || (bodyA === gameOption.enemy.sensors.right && bodyB === gameOption.player.body)) {
+
+                        console.log('-----！')
+                    } else if ((bodyA === gameOption.enemy.body && bodyB === gameOption.player.sensors.left) || (bodyA === gameOption.player.sensors.left && bodyB === gameOption.enemy.body)) {
+
+
+                        gameOption.player.matterSprite.on('animationupdate', function(anim, frame, sprite, frameKey) {
+
+                            if (frameKey === 'Attack__004.png') {
+                                console.log('222！')
+                            }
+
+                        }, this)
+
+
+                    } else if ((bodyA === gameOption.enemy.body && bodyB === gameOption.player.sensors.right) || (bodyA === gameOption.player.sensors.right && bodyB === gameOption.enemy.body)) {
+                        console.log('玩家的右边攻击了！')
+
+
+                    }
+
+
+
+                }
+
+            });
             this.matter.world.on('beforeupdate', function(event) {
                 gameOption.player.numTouching.left = 0;
                 gameOption.player.numTouching.right = 0;
@@ -300,69 +239,9 @@ export class startScene extends Phaser.Scene {
                     }
                 }
             });
-            // Update over, so now we can determine if any direction is blocked
-            this.matter.world.on('afterupdate', function(event) {
-                gameOption.player.blocked.right = gameOption.player.numTouching.right > 0 ? true : false;
-                gameOption.player.blocked.left = gameOption.player.numTouching.left > 0 ? true : false;
-                gameOption.player.blocked.bottom = gameOption.player.numTouching.bottom > 0 ? true : false;
-            });
 
 
-            gameOption.cursors = this.input.keyboard.createCursorKeys();
-
-
-
-            // 创建敌人
-            /*  let createEnimies = gameOption.createSpriteFactory(this, 'enimy1', 2);
-             gameOption.enimy = createEnimies.createSprite(200, this.bottomY - 160, 'enimy1');
-             gameOption.enimy.play('idle')
-             console.log(gameOption.enimy);
-             this.physics.add.collider(gameOption.enimy, gameOption.ground); */
-            //this.physics.add.collider(gameOption.player, gameOption.enimy);
-            //相机设置
-            this.cameras.main.setSize(gameOption.camerasWidth, gameOption.camerasHeight);
-            this.cameras.main.setBounds(0, 0, gameOption.width, this.bottomY);
-
-
-            this.cameras.main.startFollow(gameOption.player.matterSprite);
-            // gameOption.platforms = this.physics.add.staticGroup();
-
-
-            //gameOption.ground = this.physics.add.staticGroup();
-            //gameOption.ground.create(0, this.bottomY, 'ground').refreshBody();
-
-            //  this.createPlatforms();
-            //  this.createButton();
-
-
-
-            //this.physics.add.collider(gameOption.enimy, groundLayer);
-            //监测碰撞
-            // this.physics.add.collider(gameOption.player, gameOption.ground);
-            // this.physics.add.collider(gameOption.player, gameOption.platforms);
-
-
-            //创建星星
-            // gameOption.stars = this.physics.add.group({
-            //     key: 'star',
-            //     repeat: 9,
-            //     setXY: { x: 14, y: 0, stepX: gameOption.width / 10 }
-            // });
-            // gameOption.stars.children.iterate(function(child) {
-
-            //     child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-            // });
-            // this.physics.add.collider(gameOption.stars, gameOption.platforms);
-            //this.physics.add.collider(gameOption.stars, groundLayer);
-            // this.physics.add.overlap(gameOption.player, gameOption.stars, this.collectStar, null, this);
-            // 创建炸弹
-            // gameOption.bombs = this.physics.add.group();
-            // this.physics.add.collider(gameOption.bombs, gameOption.platforms);
-            // this.physics.add.collider(gameOption.bombs, gameOption.ground);
-            // this.physics.add.collider(gameOption.player, gameOption.bombs, this.hitBomb, null, this);
-
-
+            gameOption.player.skillContral(this);
 
             //构建分数
             gameOption.scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
@@ -377,6 +256,7 @@ export class startScene extends Phaser.Scene {
 
     update(time, delta) {
 
+        // gameOption.enemy.autoWalk(gameOption.player.matterSprite, 0.01, delta)
         let oldVelocityX;
         let targetVelocityX;
         let newVelocityX;
@@ -410,8 +290,10 @@ export class startScene extends Phaser.Scene {
 
             gameOption.player.matterSprite.setVelocityX(newVelocityX);
         } else {
+
             gameOption.smoothedControls.reset();
-            gameOption.player.matterSprite.anims.play('idle', true);
+
+
         }
 
 

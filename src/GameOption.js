@@ -1,6 +1,7 @@
 import { Player } from './gameActer/player';
-import { createSprite } from './public/createSprite';
-import { playConfig, SmoothedHorionztalControl } from './gameActer/player'
+import { SmoothedHorionztalControl } from './public/control';
+import { playConfig } from './gameActer/player'
+import { enemyConfig } from './gameActer/enemy'
 export let gameOption = {
     score: 0,
     gameOver: false,
@@ -13,6 +14,7 @@ export let gameOption = {
     camerasWidth: 640,
     camerasHeight: 360,
     player: playConfig,
+    enemy: enemyConfig,
     cursors: null,
     smoothedControls: new SmoothedHorionztalControl(0.001),
     animy_item: {
@@ -72,10 +74,4 @@ export let gameOption = {
         this.camerasHeight = this.height = window.innerHeight;
 
     }
-    //创建敌人
-}
-
-// 创建游戏角色工厂
-gameOption.createSpriteFactory = function(scene, name, type) {
-    return new createSprite(scene, name, type);
 }
