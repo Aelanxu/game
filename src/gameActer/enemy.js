@@ -14,12 +14,12 @@ const enemyConfig = {
         left: null,
         right: null
     },
-    numTouching: {
-        left: 0,
-        right: 0,
-        bottom: 0
+    stats: {
+        idle: false,
+        isAttacked: false,
+        attacking: false,
     },
-
+    damage: 0,
 
     speed: {
         run: 5,
@@ -30,8 +30,10 @@ const enemyConfig = {
             distance: 10,
             damage: 10,
             critical: 0.3,
-        }
+        },
+
     },
+    lastTimeAttack: 0,
     // bind for animations for this player
     anims(scene) { //动画播放
         scene.anims.create({
@@ -46,6 +48,22 @@ const enemyConfig = {
             frameRate: 10,
             repeat: -1,
             duration: 1000
+        });
+        scene.anims.create({
+            key: 'attacted',
+            frames: scene.anims.generateFrameNames('enemy', { prefix: 'attacted', start: 0, end: 0, suffix: '.png', zeroPad: 0 }),
+            frameRate: 10,
+            repeat: -1
+
+        });
+        scene.anims.create({
+            key: 'attact',
+            frames: scene.anims.generateFrameNames('enemy', { prefix: 'attact', start: 0, end: 3, suffix: '.png', zeroPad: 0 }),
+            frameRate: 10,
+            repeat: 0,
+            duration: 1000,
+
+
         })
     },
     //box bind for enemy
@@ -71,11 +89,15 @@ const enemyConfig = {
             .setExistingBody(compoundBody)
             .setFixedRotation() // Sets max inertia to prevent rotation
             .setPosition(400, 200)
-            .play('e_idle', true);
+            //.play('e_idle', true);
+
+        this.stats.idle = true;
 
     },
     //自动追踪
-    autoWalk(player, speed, delta) {
+    autoWalk(player, speed, time, delta) {
+
+
 
         let oldVelocityX;
         let targetVelocityX;
@@ -84,7 +106,14 @@ const enemyConfig = {
         let distance = player_x - this.matterSprite.x;
         let smoothedControls = new SmoothedHorionztalControl(speed);
 
-        if (distance < 0) {
+
+        if (Math.abs(distance) < 60) {
+
+            this.matterSprite.setVelocityX(0);
+
+            this.autoAttack(time, 1)
+
+        } else if (distance < 0 && Math.abs(distance) > 60) {
 
 
             smoothedControls.moveLeft(delta);
@@ -99,7 +128,7 @@ const enemyConfig = {
                 this.matterSprite.flipX = true;
             }
 
-        } else if (distance > 0) {
+        } else if (distance > 0 && Math.abs(distance) > 60) {
 
             smoothedControls.moveRight(delta);
             this.matterSprite.anims.play('e_run', true);
@@ -111,7 +140,41 @@ const enemyConfig = {
                 this.matterSprite.flipX = false;
             }
 
+        } else {
+            this.matterSprite.setVelocityX(0)
+
+            this.matterSprite.anims.play('e_idle', true);
         }
+    },
+    autoAttack(time, num) {
+
+        let interval = time - this.lastTimeAttack;
+
+        if (interval > 2000) {
+            this.matterSprite.anims.play('attact', true)
+            this.matterSprite.anims.playAfterRepeat('e_idle');
+            this.damage = num;
+            this.lastTimeAttack = time;
+        }
+
+
+
+
+
+
+    },
+    isAcctacked(num) {
+
+
+        this.health -= num;
+        this.matterSprite.anims.play('attacted', true);
+        this.matterSprite.anims.playAfterRepeat('e_idle');
+
+        console.log(this.health)
+
+
+
+
     }
 
 

@@ -6,6 +6,7 @@ export class startScene extends Phaser.Scene {
         super("startScene");
         this.bottomY = gameOption.height - gameOption.height * 0.3; // 地面离屏幕下边缘的距离
         this.map = null;
+        this.flag = false;
 
 
     }
@@ -125,7 +126,17 @@ export class startScene extends Phaser.Scene {
 
 
 
+    acluter(bool) {
 
+        let is = bool;
+        if (is) {
+            gameOption.enemy.health -= 1;
+            // console.log(gameOption.enemy.health)
+
+
+        }
+
+    }
 
 
 
@@ -149,11 +160,6 @@ export class startScene extends Phaser.Scene {
 
 
             // Update over, so now we can determine if any direction is blocked
-            this.matter.world.on('afterupdate', function(event) {
-                gameOption.player.blocked.right = gameOption.player.numTouching.right > 0 ? true : false;
-                gameOption.player.blocked.left = gameOption.player.numTouching.left > 0 ? true : false;
-                gameOption.player.blocked.bottom = gameOption.player.numTouching.bottom > 0 ? true : false;
-            });
 
 
             gameOption.cursors = this.input.keyboard.createCursorKeys();
@@ -176,12 +182,26 @@ export class startScene extends Phaser.Scene {
             this.cameras.main.startFollow(gameOption.player.matterSprite);
 
             // 监测碰撞
+            gameOption.player.matterSprite.on('animationupdate', (anim, frame, sprite, frameKey) => {
+
+                if (frameKey === 'Attack__004.png' && this.flag) {
+                    console.log('sss', this.flag)
+                        // this.acluter(this.num);
+                    gameOption.enemy.isAcctacked(1)
 
 
-            this.matter.world.on('collisionstart', function(event) {
+
+                }
+            })
+
+
+            this.matter.world.on('collisionstart', (event) => {
+
                 for (let i = 0; i < event.pairs.length; i++) {
                     let bodyA = event.pairs[i].bodyA;
                     let bodyB = event.pairs[i].bodyB;
+
+
                     if ((bodyA === gameOption.player.body && bodyB === gameOption.enemy.sensors.left) || (bodyA === gameOption.enemy.sensors.left && bodyB === gameOption.player.body)) {
                         console.log('----！')
 
@@ -190,20 +210,20 @@ export class startScene extends Phaser.Scene {
                         console.log('-----！')
                     } else if ((bodyA === gameOption.enemy.body && bodyB === gameOption.player.sensors.left) || (bodyA === gameOption.player.sensors.left && bodyB === gameOption.enemy.body)) {
 
-
-                        gameOption.player.matterSprite.on('animationupdate', function(anim, frame, sprite, frameKey) {
-
-                            if (frameKey === 'Attack__004.png') {
-                                console.log('222！')
-                            }
-
-                        }, this)
+                        this.flag = true;
+                        console.log('玩家的zuo边攻击了！')
 
 
                     } else if ((bodyA === gameOption.enemy.body && bodyB === gameOption.player.sensors.right) || (bodyA === gameOption.player.sensors.right && bodyB === gameOption.enemy.body)) {
+                        this.flag = true;
                         console.log('玩家的右边攻击了！')
 
 
+                    } else if ((bodyA === gameOption.enemy.body && bodyB === gameOption.player.body) || (bodyA === gameOption.player.body && bodyB === gameOption.enemy.body)) {
+                        this.flag = true;
+
+                    } else {
+                        this.flag = false;
                     }
 
 
@@ -211,34 +231,11 @@ export class startScene extends Phaser.Scene {
                 }
 
             });
-            this.matter.world.on('beforeupdate', function(event) {
-                gameOption.player.numTouching.left = 0;
-                gameOption.player.numTouching.right = 0;
-                gameOption.player.numTouching.bottom = 0;
-            });
-            this.matter.world.on('collisionactive', function(event) {
-                var playerBody = gameOption.player.body;
-                var left = gameOption.player.sensors.left;
-                var right = gameOption.player.sensors.right;
-                var bottom = gameOption.player.sensors.bottom;
-                for (var i = 0; i < event.pairs.length; i++) {
-                    var bodyA = event.pairs[i].bodyA;
-                    var bodyB = event.pairs[i].bodyB;
 
-                    if (bodyA === playerBody || bodyB === playerBody) {
-                        continue;
-                    } else if (bodyA === bottom || bodyB === bottom) {
-                        // Standing on any surface counts (e.g. jumping off of a non-static crate).
-                        gameOption.player.numTouching.bottom += 1;
-                    } else if ((bodyA === left && bodyB.isStatic) || (bodyB === left && bodyA.isStatic)) {
-                        // Only static objects count since we don't want to be blocked by an object that we
-                        // can push around.
-                        gameOption.player.numTouching.left += 1;
-                    } else if ((bodyA === right && bodyB.isStatic) || (bodyB === right && bodyA.isStatic)) {
-                        gameOption.player.numTouching.right += 1;
-                    }
-                }
-            });
+            this.matter.world.on('collisionend', (event) => {
+
+                // console.log(gameOption.enemy.health)
+            })
 
 
             gameOption.player.skillContral(this);
@@ -256,7 +253,7 @@ export class startScene extends Phaser.Scene {
 
     update(time, delta) {
 
-        // gameOption.enemy.autoWalk(gameOption.player.matterSprite, 0.01, delta)
+        gameOption.enemy.autoWalk(gameOption.player.matterSprite, 0.01, time, delta)
         let oldVelocityX;
         let targetVelocityX;
         let newVelocityX;

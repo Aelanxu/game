@@ -10,7 +10,7 @@
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "attacted.png",
+					"filename": "attacted0.png",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -288,6 +288,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:dabff91435bf3798ee14ac94b21409d9:e8da4a5e1c58c36938ad8bbecaa42dfc:a99356c10d69482e9bee53d25c3d05e1$"
+		"smartupdate": "$TexturePacker:SmartUpdate:c0c750e360a3b6ad8d75a7fd1d539b63:e8da4a5e1c58c36938ad8bbecaa42dfc:a99356c10d69482e9bee53d25c3d05e1$"
 	}
 }

@@ -7,7 +7,7 @@ const playConfig = {
     blocked: {
         left: false,
         right: false,
-        bottom: false
+        bottom: true
     },
     sensors: {
         bottom: null,
@@ -93,6 +93,7 @@ const playConfig = {
             switch (event.key) {
                 case "a":
                     this.matterSprite.anims.play('attack', true);
+                    this.matterSprite.setVelocityX(0)
 
                     break;
 

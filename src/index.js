@@ -16,7 +16,7 @@ window.onload = () => {
             matter: {
                 gravity: { y: 1.2 },
                 enableSleep: false,
-                debug: true
+                debug: false
             }
 
         },
