@@ -254,6 +254,7 @@ export class startScene extends Phaser.Scene {
     update(time, delta) {
 
         gameOption.enemy.autoWalk(gameOption.player.matterSprite, 0.01, time, delta)
+        gameOption.enemy.createBlood(this, gameOption.enemy.matterSprite)
         let oldVelocityX;
         let targetVelocityX;
         let newVelocityX;
