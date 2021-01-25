@@ -66,8 +66,8 @@ const playConfig = {
         let sy = h / 2;
         this.body = M.Bodies.rectangle(sx, sy, w * 0.75, h, { chamfer: { radius: 10 } });
         this.sensors.bottom = M.Bodies.rectangle(sx, h, sx, 5, { isSensor: true });
-        this.sensors.left = M.Bodies.rectangle(sx - w * 0.45, sy, 5, h * 0.25, { isSensor: true });
-        this.sensors.right = M.Bodies.rectangle(sx + w * 0.45, sy, 5, h * 0.25, { isSensor: true });
+        this.sensors.left = M.Bodies.rectangle(sx - w * 0.4, sy, 5, h * 0.25, { isSensor: true });
+        this.sensors.right = M.Bodies.rectangle(sx + w * 0.4, sy, 5, h * 0.25, { isSensor: true });
         let compoundBody = M.Body.create({
             parts: [
                 this.body, this.sensors.bottom, this.sensors.left,
@@ -93,7 +93,8 @@ const playConfig = {
             switch (event.key) {
                 case "a":
                     this.matterSprite.anims.play('attack', true);
-                    this.matterSprite.setVelocityX(0)
+
+
 
                     break;
 

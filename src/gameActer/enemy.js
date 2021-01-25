@@ -3,6 +3,10 @@ import { SmoothedHorionztalControl } from '../public/control'
 const enemyConfig = {
     matterSprite: null,
     health: 100,
+    blood: {
+        graphics: null,
+        rect: null
+    },
     body: null,
     blocked: {
         left: false,
@@ -66,6 +70,21 @@ const enemyConfig = {
 
         })
     },
+    // create blood process
+    createBlood(scene, sprite) {
+
+        this.blood.graphics = scene.add.graphics({ lineStyle: { width: 1, color: 0xffffff }, fillStyle: { color: 0x0000aa } });
+
+        this.blood.rect = new Phaser.Geom.Rectangle(0, 0, 100, 5);
+        this.blood.rect.x = sprite.x;
+        this.blood.rect.y = sprite.y;
+        this.blood.graphics.clear();
+        this.blood.graphics.fillRectShape(this.blood.rect);
+
+
+
+
+    },
     //box bind for enemy
     createBody(scene) {
         let M = Phaser.Physics.Matter.Matter;
@@ -73,10 +92,12 @@ const enemyConfig = {
         let h = this.matterSprite.height;
         let sx = w / 2;
         let sy = h / 2;
+
+
         this.body = M.Bodies.rectangle(sx, sy, w * 0.75, h, { chamfer: { radius: 10 } });
         this.sensors.bottom = M.Bodies.rectangle(sx, h, sx, 5, { isSensor: true });
-        this.sensors.left = M.Bodies.rectangle(sx - w * 0.45, sy, 5, h * 0.25, { isSensor: true });
-        this.sensors.right = M.Bodies.rectangle(sx + w * 0.45, sy, 5, h * 0.25, { isSensor: true });
+        this.sensors.left = M.Bodies.rectangle(sx - w * 0.4, sy, 5, h * 0.25, { isSensor: true });
+        this.sensors.right = M.Bodies.rectangle(sx + w * 0.4, sy, 5, h * 0.25, { isSensor: true });
         let compoundBody = M.Body.create({
             parts: [
                 this.body, this.sensors.bottom, this.sensors.left,
@@ -91,7 +112,6 @@ const enemyConfig = {
             .setPosition(400, 200)
             //.play('e_idle', true);
 
-        this.stats.idle = true;
 
     },
     //自动追踪
