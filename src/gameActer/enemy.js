@@ -73,13 +73,14 @@ const enemyConfig = {
     // create blood process
     createBlood(scene, sprite) {
 
-        this.blood.graphics = scene.add.graphics({ lineStyle: { width: 1, color: 0xffffff }, fillStyle: { color: 0x0000aa } });
 
-        this.blood.rect = new Phaser.Geom.Rectangle(0, 0, 100, 5);
-        this.blood.rect.x = sprite.x;
-        this.blood.rect.y = sprite.y;
-        this.blood.graphics.clear();
-        this.blood.graphics.fillRectShape(this.blood.rect);
+
+
+        this.blood.setDisplaySize(this.health, 5);
+        this.blood.x = sprite.x - this.matterSprite.width / 2;
+        this.blood.y = sprite.y - this.matterSprite.height / 2;
+        // this.blood.graphics.clear();
+        // this.blood.graphics.fillRectShape(this.blood.rect);
 
 
 
@@ -93,7 +94,7 @@ const enemyConfig = {
         let sx = w / 2;
         let sy = h / 2;
 
-
+        this.blood = scene.add.image(this.matterSprite.x, this.matterSprite.y, 'blood').setOrigin(0, 0);
         this.body = M.Bodies.rectangle(sx, sy, w * 0.75, h, { chamfer: { radius: 10 } });
         this.sensors.bottom = M.Bodies.rectangle(sx, h, sx, 5, { isSensor: true });
         this.sensors.left = M.Bodies.rectangle(sx - w * 0.4, sy, 5, h * 0.25, { isSensor: true });
