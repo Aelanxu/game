@@ -1,7 +1,7 @@
-import { Player } from './gameActer/player';
+import { Player } from './gameActor/player';
 import { SmoothedHorionztalControl } from './public/control';
-import { playConfig } from './gameActer/player'
-import { enemyConfig } from './gameActer/enemy'
+import { playConfig } from './gameActor/player'
+import { enemyConfig } from './gameActor/enemy'
 export let gameOption = {
     score: 0,
     gameOver: false,
@@ -16,24 +16,8 @@ export let gameOption = {
     player: playConfig,
     enemy: enemyConfig,
     cursors: null,
-    smoothedControls: new SmoothedHorionztalControl(0.001),
-    animy_item: {
-        health: 100,
-        skill: {
-            kick: {
-                name: 'kick',
-                distance: [30, 50],
-                damage: 10,
-                critical: 0.3,
-            },
-            punch: {
-                distance: [0, 30],
-                damage: 5,
-                critical: 0.4,
-            }
-        }
+    smoothedControls: new SmoothedHorionztalControl(0.01),
 
-    },
     //载入游戏进度
     loadProgress() {
         let width = this.cameras.main.width;

@@ -2,6 +2,7 @@ import { SmoothedHorionztalControl } from '../public/control'
 //  创建游戏角色动画
 const enemyConfig = {
     matterSprite: null,
+    hitBox: null,
     health: 100,
     blood: {
         graphics: null,
@@ -22,6 +23,7 @@ const enemyConfig = {
         idle: false,
         isAttacked: false,
         attacking: false,
+        run: false,
     },
     damage: 0,
 
@@ -93,16 +95,16 @@ const enemyConfig = {
         let h = this.matterSprite.height;
         let sx = w / 2;
         let sy = h / 2;
-
+        //血条
         this.blood = scene.add.image(this.matterSprite.x, this.matterSprite.y, 'blood').setOrigin(0, 0);
         this.body = M.Bodies.rectangle(sx, sy, w * 0.75, h, { chamfer: { radius: 10 } });
         this.sensors.bottom = M.Bodies.rectangle(sx, h, sx, 5, { isSensor: true });
-        this.sensors.left = M.Bodies.rectangle(sx - w * 0.4, sy, 5, h * 0.25, { isSensor: true });
-        this.sensors.right = M.Bodies.rectangle(sx + w * 0.4, sy, 5, h * 0.25, { isSensor: true });
+        // this.sensors.left = M.Bodies.rectangle(sx - w * 0.4, sy, 5, h * 0.25, { isSensor: true });
+        // this.sensors.right = M.Bodies.rectangle(sx + w * 0.4, sy, 5, h * 0.25, { isSensor: true });
         let compoundBody = M.Body.create({
             parts: [
-                this.body, this.sensors.bottom, this.sensors.left,
-                this.sensors.right
+                this.body,
+                this.sensors.bottom
             ],
             restitution: 0.05 //与边界保持距离
         });
@@ -115,8 +117,24 @@ const enemyConfig = {
 
 
     },
+    createHitBox(scene, sprite, width, height) {
+        if (this.hitBox) {
+            this.hitBox.destroy();
+        }
+
+        let w = width;
+        let h = height;
+        if (sprite.flipX) {
+            this.hitBox = scene.add.rectangle(sprite.x - sprite.width / 2, sprite.y, w, h)
+        } else {
+            this.hitBox = scene.add.rectangle(sprite.x + sprite.width / 2, sprite.y, w, h)
+        }
+        scene.matter.add.gameObject(this.hitBox, { label: 'e_hitBox', isSensor: true, isStatic: true })
+
+
+    },
     //自动追踪
-    autoWalk(player, speed, time, delta) {
+    autoWalk(scene, player, speed, time, delta) {
 
 
 
@@ -128,7 +146,7 @@ const enemyConfig = {
         let smoothedControls = new SmoothedHorionztalControl(speed);
 
 
-        if (Math.abs(distance) < 60) {
+        if (Math.abs(distance) < 80) {
 
             this.matterSprite.setVelocityX(0);
 
@@ -176,11 +194,35 @@ const enemyConfig = {
             this.matterSprite.anims.playAfterRepeat('e_idle');
             this.damage = num;
             this.lastTimeAttack = time;
+
         }
 
 
 
 
+
+
+    },
+
+    animsLisnter(scene, sprite) {
+        this.matterSprite.on('animationupdate', (anim, frame, sprite, frameKey) => {
+
+            if (frameKey === 'attact1.png') {
+
+                this.createHitBox(scene, sprite, 20, 60)
+                    // this.acluter(this.num);
+                    //this.isAcctacked(1)
+
+            }
+        });
+        this.matterSprite.on('animationcomplete', (anim, frame, sprite, frameKey) => {
+
+            this.hitBox.destroy()
+
+
+
+
+        })
 
 
     },

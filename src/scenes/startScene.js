@@ -181,20 +181,10 @@ export class startScene extends Phaser.Scene {
             this.cameras.main.setBounds(0, 0, gameOption.width, this.bottomY);
             this.cameras.main.startFollow(gameOption.player.matterSprite);
 
-            // 监测碰撞
-            gameOption.player.matterSprite.on('animationupdate', (anim, frame, sprite, frameKey) => {
 
-                if (frameKey === 'Attack__004.png' && this.flag) {
-                    console.log('sss', this.flag)
-                        // this.acluter(this.num);
-                    gameOption.enemy.isAcctacked(1)
-
-
-
-                }
-            })
-
-
+            // 监听攻击动画
+            gameOption.enemy.animsLisnter(this, gameOption.enemy.matterSprite);
+            gameOption.player.animsLisnter(this, gameOption.player.matterSprite);
             this.matter.world.on('collisionstart', (event) => {
 
                 for (let i = 0; i < event.pairs.length; i++) {
@@ -202,29 +192,36 @@ export class startScene extends Phaser.Scene {
                     let bodyB = event.pairs[i].bodyB;
 
 
-                    if ((bodyA === gameOption.player.body && bodyB === gameOption.enemy.sensors.left) || (bodyA === gameOption.enemy.sensors.left && bodyB === gameOption.player.body)) {
-                        console.log('----！')
+                    if ((bodyA.label === 'e_hitBox' && bodyB === gameOption.player.body) || (bodyB.label === 'e_hitBox' && bodyA === gameOption.player.body)) {
+                        console.log('我被攻击');
 
-                    } else if ((bodyA === gameOption.player.body && bodyB === gameOption.enemy.sensors.right) || (bodyA === gameOption.enemy.sensors.right && bodyB === gameOption.player.body)) {
-
-                        console.log('-----！')
-                    } else if ((bodyA === gameOption.enemy.body && bodyB === gameOption.player.sensors.left) || (bodyA === gameOption.player.sensors.left && bodyB === gameOption.enemy.body)) {
-
-                        this.flag = true;
-                        console.log('玩家的zuo边攻击了！')
-
-
-                    } else if ((bodyA === gameOption.enemy.body && bodyB === gameOption.player.sensors.right) || (bodyA === gameOption.player.sensors.right && bodyB === gameOption.enemy.body)) {
-                        this.flag = true;
-                        console.log('玩家的右边攻击了！')
-
-
-                    } else if ((bodyA === gameOption.enemy.body && bodyB === gameOption.player.body) || (bodyA === gameOption.player.body && bodyB === gameOption.enemy.body)) {
-                        this.flag = true;
-
-                    } else {
-                        this.flag = false;
                     }
+                    if ((bodyA.label === 'p_hitBox' && bodyB === gameOption.enemy.body) || (bodyB.label === 'p_hitBox' && bodyA === gameOption.enemy.body)) {
+                        console.log('我攻击敌人')
+                        gameOption.enemy.isAcctacked(2);
+
+                    }
+
+
+                    // if ((bodyA === gameOption.player.body && bodyB === gameOption.enemy.sensors.left) || (bodyA === gameOption.enemy.sensors.left && bodyB === gameOption.player.body)) {
+                    //     console.log('----！')
+
+                    // } else if ((bodyA === gameOption.player.body && bodyB === gameOption.enemy.sensors.right) || (bodyA === gameOption.enemy.sensors.right && bodyB === gameOption.player.body)) {
+
+                    //     console.log('-----！')
+                    // } else if ((bodyA === gameOption.enemy.body && bodyB === gameOption.player.sensors.left) || (bodyA === gameOption.player.sensors.left && bodyB === gameOption.enemy.body)) {
+
+                    //     this.flag = true;
+                    //     console.log('玩家的zuo边攻击了！')
+
+
+                    // } else if ((bodyA === gameOption.enemy.body && bodyB === gameOption.player.sensors.right) || (bodyA === gameOption.player.sensors.right && bodyB === gameOption.enemy.body)) {
+                    //     this.flag = true;
+                    //     console.log('玩家的右边攻击了！')
+
+
+                    // } else if ((bodyA === gameOption.enemy.body && bodyB === gameOption.player.body) || (bodyA === gameOption.player.body && bodyB === gameOption.enemy.body)) {
+                    //     this.flag = true;
 
 
 
@@ -253,7 +250,7 @@ export class startScene extends Phaser.Scene {
 
     update(time, delta) {
 
-        gameOption.enemy.autoWalk(gameOption.player.matterSprite, 0.01, time, delta)
+        gameOption.enemy.autoWalk(this, gameOption.player.matterSprite, 0.01, time, delta)
         gameOption.enemy.createBlood(this, gameOption.enemy.matterSprite)
         let oldVelocityX;
         let targetVelocityX;

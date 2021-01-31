@@ -18,7 +18,7 @@ export class loadScene extends Phaser.Scene {
         this.load.image('upB', 'upB.png');
         this.load.image('tiles', 'tileds/tiles.png');
         this.load.tilemapTiledJSON('map', 'tileds/map.json');
-        this.load.atlas('renzhe', 'player/renzhe.png', 'player/renzhe.json');
+        this.load.atlas('renzhe', 'player/player.png', 'player/player.json');
         this.load.atlas('enemy', 'enimies/enemy.png', 'enimies/enemy.json');
         this.load.image('blood', 'enimies/blood.png');
         //this.load.spritesheet('enemy', 'enimies/enemy.png', { frameWidth: 100, frameHeight: 180 });
