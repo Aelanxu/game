@@ -1,7 +1,7 @@
 class EnemyClass {
     constructor(scene, option) {
         this.scene = scene;
-        this.matterSprite = null;
+        this.matterSprite = null; // create a sprite frome phaser3
         this.blood = null;
         this.body = null;
         // this.blocked = null;
