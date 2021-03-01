@@ -12,13 +12,25 @@ class EnemyClass {
     };
     /* initialize this class
     create game sprite for enemy */
-    initialization(scene) {
+    initialization() {
 
-        this.createEnemyBody(scene);
+        this.createEnemyBody(this.scene);
 
     };
 
+    //loading animations
 
+    loadAnimations(animsArray) {
+        if (Array.isArray(animsArray)) {
+            for (let i = 0; i < animsArray.length; i++) {
+                this.scene.anims.create(animsArray[i]);
+            }
+        } else {
+            console.log('argurment is not Array')
+            return
+        }
+
+    };
 
 
     //create enemy body
